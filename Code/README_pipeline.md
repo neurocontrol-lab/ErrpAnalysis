@@ -7,9 +7,12 @@ test_event_parser
 stage01_parse_events
 stage02_preprocess_epochs
 stage03_plot_errp
+stage04_group_averages
 ```
 
 Configuration is in config.m. Signal Processing Toolbox and Statistics and Machine Learning Toolbox are required. Originals and legacy MAT files are never overwritten; reruns replace only output/pipeline_v1 products.
+
+config.m discovers all subject folders containing run-named EEG recordings (25 subjects, 380 runs at the current inventory). Stage 4 creates an equal-subject-weighted average for each session under figures/group_sessions. It includes subjects with at least two retained trials in each condition for that session. Tests operate on paired subject mean differences, not pooled trials; Bonferroni applies to 8000 comparisons within each session. The band shows +/-1 SEM of subject differences. Contributor tables record exactly which subjects and trials enter each session. Eligible subject sets can differ across sessions, so between-session comparisons are not automatically within-subject comparisons. No causal stimulation effect is inferred.
 
 Stage 1 reads the run-pattern files for S1=spe30 and S2=mle01, matches mouse logs by subject/session/run suffix, and records trial identities and raw sample positions. Missing/duplicate event sequences or mouse disagreements are invalid, not silently labelled correct. The manifest explicitly excludes training; this does not yet resolve the historic S1 paper count.
 

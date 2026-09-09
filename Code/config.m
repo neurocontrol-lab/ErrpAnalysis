@@ -1,7 +1,14 @@
 function cfg = config()
 % Explicit settings for the new pipeline; independent of the current folder.
 cfg.root = fileparts(fileparts(mfilename('fullpath')));
-cfg.subjects = {'spe30','mle01'}; % S1, S2; run manifest remains auditable
+folders=dir(fullfile(cfg.root,'data'));
+folders=folders([folders.isdir] & ~startsWith({folders.name},'.'));
+cfg.subjects={};
+for k=1:numel(folders)
+    if ~isempty(dir(fullfile(folders(k).folder,folders(k).name,'*_run*_EEG.easy')))
+        cfg.subjects{end+1}=folders(k).name;
+    end
+end
 cfg.sessions = {'pre','post','retest'};
 cfg.runPattern = '*_run*_EEG.easy'; % excludes training and stimulation
 cfg.fs = 500;

@@ -17,7 +17,11 @@ for s=1:numel(cfg.subjects)
                 height(candidate)>0 && any(candidate.event==100);
         end
         logs=logs(usable);
-        assert(numel(logs)<=1,'Ambiguous mouse logs for %s.',name);
+        mouseCandidates=string({logs.name});
+        if numel(logs)>1
+            warning('Ambiguous mouse logs for %s; retaining run as unvalidated.',name);
+            logs=logs([]);
+        end
         mousePath='';
         if isempty(logs)
             mouse=table([],[],[],[],[],'VariableNames',{'trial','time','event','x_target','y_target'});
@@ -28,6 +32,7 @@ for s=1:numel(cfg.subjects)
         raw=readmatrix(rawPath,'FileType','text');
         [trials,events,info]=parse_run(raw,mouse,cfg);
         info.rawPath=rawPath; info.mousePath=mousePath; info.subject=subject;
+        info.mouseCandidates=mouseCandidates;
         parts=regexp(name,'^(\d{8})\d{6}_(\w+)_(pre|post|retest)_run(\d+)_EEG.easy$','tokens','once');
         assert(~isempty(parts),'Unrecognized run filename: %s',name);
         info.recordingDate=parts{1}; info.session=parts{3}; info.runNumber=str2double(parts{4});

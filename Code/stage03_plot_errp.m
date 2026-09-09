@@ -6,7 +6,6 @@ for s=1:numel(cfg.subjects)
   for ss=1:numel(cfg.sessions)
     session=cfg.sessions{ss};
     files=dir(fullfile(cfg.output,'processed',['*_' cfg.subjects{s} '_' session '_run*_EEG.mat']));
-    assert(~isempty(files),'No processed runs for %s',cfg.subjects{s});
     X=[]; labels=[]; trialMetadata=table();
     for f=1:numel(files)
         d=load(fullfile(files(f).folder,files(f).name)); keep=d.trials.accepted;
@@ -19,6 +18,7 @@ for s=1:numel(cfg.subjects)
     if sum(labels==1)<2 || sum(labels==2)<2
         warning('Too few retained trials for %s %s; skipping plot',cfg.subjects{s},session); continue;
     end
+    fprintf('Plotting %s / %s: %d trials\n',cfg.subjects{s},session,numel(labels));
     correct=squeeze(mean(X(labels==1,:,:),1)); displaced=squeeze(mean(X(labels==2,:,:),1));
     difference=displaced-correct; p=nan(size(correct));
     for ch=1:8
