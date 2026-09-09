@@ -1,0 +1,517 @@
+EEG CORRELA TES OF ERROR-RELA TED ACTIVITY DURING
+BALLISTIC COMPUTER MOUSE MOVEMENTS
+Idorenyin Amaunam1, Mushfika Sultana1, Borja Rodriguez-Herreros2, Tej Tadi3, Robert Leeb3,
+Serafeim Perdikis1
+1Brain-Computer Interface and Neural Engineering Laboratory, School of Computer Science and
+Electronic Engineering, University of Essex, United Kingdom
+2Service des Troubles du Spectre de l’Autisme et apparentés, Département de psychiatrie, Lausanne
+University Hospital (CHUV), Lausanne, Switzerland
+3Mindmaze SA, Lausanne, Switzerland
+E-mail: ia21792@essex.ac.uk
+ABSTRACT: It has been repeatedly shown that process-
+ing of perceived errors in the human brain may elicit
+some type of evoked response in electroencephalogra-
+phy (EEG) collectively termed as Error-Related Poten-
+tial (ErrP). The study of ErrP signatures offers a poten-
+tial back door to better understanding how the brain en-
+codes and reacts to errors and a useful tool for poking
+adaptation and learning, but also has several practical ap-
+plications in Brain-Computer Interface (BCI) and general
+Human-Computer Interaction (HCI). The bulk of this lit-
+erature has focused on so-called “interaction” ErrP, re-
+flecting the response to discrete events occurring during
+self-paced, casual interaction of a subject with their en-
+vironment. Here we present a two-case study investigat-
+ing the existence and characteristics of ErrP EEG corre-
+lates in an eye-hand coordination task consisting in “bal-
+listic” computer mouse movements, where the action and
+reaction time constraints imposed on the subject are ex-
+tremely tight. We show that clear EEG substrates of er-
+ror processing can be retrieved for both subjects and bare
+strong similarities with the interaction ErrP waveforms.
+The findings of this work suggest the possibility of detect-
+ing, in real-time, errors committed during fast-paced in-
+teraction, thus potentially enabling automatic ErrP-based
+error correction in real-world BCI and HCI scenarios.
+INTRODUCTION
+Error-Related Potentials (ErrPs) are Event-Related Po-
+tential (ERP) waveforms in EEG time-locked to the re-
+alization of committed errors [1]. Mainly owing to its
+utility as an automatic, subconscious means of error cor-
+rection during BCI [2] or general HCI, the topic of ErrP
+signatures in various contexts has been extensively stud-
+ied in the last 20 years [3]. ErrP correlates are relatively
+slow signals characterized by a negative fronto-central
+peak around 100 ms after the error onset, and followed
+by a larger, positive, centro-parietal peak with latency
+about 500 ms, which has been associated with the sub-
+ject’s awareness of the error [1, 4]. Based on source imag-
+ing and localization studies, ErrP correlates are believed
+to originate in the anterior cingulate cortex [1, 4].
+Besides the inherent interest of cognitive neuroscience in
+ErrPs as a means to elucidate the brain’s error process-
+ing mechanisms [1, 5], ErrP detection has attracted a lot
+of attention due to a wide spectrum of promising appli-
+cations in BCI and HCI. First and foremost, ErrP recog-
+nition offers a seamless avenue for automatic error cor-
+rection in human-machine interfaces [6, 7] that requires
+no direct manual intervention by the user [3]. In partic-
+ular, this is convenient for BCI applications where EEG
+or other brain signal monitoring is already available to
+support the main interface control modality [8–14], so
+that ErrP detection yields no additional burden for the
+system’s apparatus. As ErrPs are a natural physiological
+“reward”/punishment signal, they have also been used in
+the context of BCI human-machine co-adaptation [15],
+especially with respect to reinforcement learning ap-
+proaches [16–18]. Interestingly, under the same frame-
+work ErrPs may also play the role of the main BCI modal-
+ity [19, 20]. In order to optimize such applications, a lot
+of studies have been dedicated to the design of machine
+learning and other techniques for enabling high-accuracy
+single-trial classification of ErrP correlates, overcoming
+various engineering challenges [4, 12, 21–23].
+The aforementioned prototypical error-related pattern is
+commonly observed in experimental protocols involving
+“discrete” errors of the interface that clearly constitute
+single events: there is an abrupt, profound error onset to
+which the ErrP signal is time-locked, and the duration of
+the erroneous action or feedback are relatively short [4,
+11, 23, 24], even when such errors are embedded in con-
+tinuous interaction and unpredictable feedback tasks [6,
+12, 14, 25, 26]. Very few investigations have been car-
+ried out with regard to gradually unfolding errors [27].
+However, despite the similarities of extracted ErrP wave-
+forms in this regular discrete ErrP category, important
+differences or even complete absence of ErrPs have been
+denoted depending on the particular task (e.g., interac-
+tion, response, or observation [3]) and contextual circum-
+stances [24] of the experimental design.
+As previously argued [1], a critical factor in the elicita-
+tion and shape of ErrPs may be the time constraints im-
+posed on a human subject when requested to detect er-
+rors. Notwithstanding the fact that many of the studies in
+this literature yielded high mental workload for the user
+during the error recognition task induced by concurrent
+observation or interaction tasks, typically, the amount of
+time available to consolidate the occurrence of an error is
+ample. Here, we aimed to investigate whether ErrP sig-
+natures can be elicited and captured in EEG activity when
+errors happen while human individuals are engaged in an
+extremely fast-paced eye-hand coordination activity.
+The elegance and efficiency of human movements owes
+much to our ability to compensate for inaccuracies and
+environmental perturbations. Performing online correc-
+tions relies on real-time monitoring of the hand/body tra-
+jectory from the onset of the movement [28]. We devised
+an experimental protocol with two related but distinct
+goals: (i) to assess the facilitatory effects of excitatory
+neuromodulation, specifically, anodal high-density tran-
+scranial Direct Current Stimulation (tDCS) [29] of the
+intraparietal sulcus on visuo-motor coordination, and (ii)
+to determine the existence and features of ErrP with si-
+multaneous EEG monitoring, while subjects are asked to
+perform a “double-step” reaching task. Here, we provide
+preliminary analysis on the second goal of describing po-
+tential EEG correlates of error perception in this protocol.
+Online eye-hand coordination has often been investigated
+via double-step reaching tasks, in which the target of a
+reaching movement suddenly moves to a new location af-
+ter the movement onset and subjects are asked to adjust
+the movement trajectory to compensate for the perturba-
+tion. In the present study, subjects were required to put
+the computer mouse pointer into a narrow circular target
+at the top of the screen starting from a base location at
+the bottom with “ballistic” movements, as accurately and,
+very importantly, as fast as possible, with maximum pos-
+sible velocity and acceleration. We hypothesized that tar-
+get displacement during ballistic movements may evoke
+ErrP waveforms and seek to describe them. Our prelimi-
+nary results with two subjects confirm this hypothesis and
+suggest that, despite the task’s extreme timing demands,
+the elicited error-related responses resemble the interac-
+tion ErrPs identified in the literature. We further show
+that trials with target displacement can be identified with
+a shallow classifier, opening the road for enriching natu-
+ralistic interaction with elaborate error detection and cor-
+rection capabilities even for hurried tasks.
+MATERIALS AND METHODS
+Participants:
+We report on two subjects, S1 and S2, randomly picked
+for initial analysis from a larger dataset of 28 healthy
+right-handed volunteers (11 female; mean age 24.9 ±
+5.8 years). All participants were naïve with respect to
+the experimental procedures and the hypothesis of the
+study. Participants had normal or corrected-to-normal vi-
+sual acuity and reported no history of neuropsychiatric
+Figure 1: Experimental protocol. Trial timeline and illustration
+of the protocol’s events and visual elements.
+disorders. Prior to their inclusion in the study, partici-
+pants signed written informed consent. The study was
+performed according to the declaration of Helsinki and
+was approved by the local Ethics Committee. All partic-
+ipants were screened for HD-tDCS tolerance [29]. The
+Edinburgh handedness inventory was administered to as-
+sess handedness.
+Experimental setup and protocol:
+Participants were seated in front of a table positioned 45-
+50 cm below their eyes. Visual stimuli (see below) were
+generated using Python v3.6 running on Windows 10 in
+an Intel Core i7-7700 3.6 GHz computer and displayed
+on a 24” HP E232 monitor with a refresh rate of 60 Hz
+and a resolution of 1920x1080 pixels. A high-speed Log-
+itech G G203 prodigy cable mouse, sampling at 250 Hz,
+was used to track the hand’s 2D spatial position during
+reaching movements.
+EEG data were recorded at 500 Hz sampling rate with
+a Starstim 8 hybrid EEG/tDCS 8-channel, active, wet,
+Ag/AgCl electrode system (Neuroelectrics, Barcelona,
+Spain). We measured positions FCz, FC1, Cz, CP1, CP5,
+P3, PO3 and PO7 of the 10-20 EEG localization sys-
+tem. This channel montage was designed to satisfy and
+compromise the needs of both the goals set during the
+study’s design, including the possibility to focally excite
+the intraparietal sulcus through tDCS. Enough, strategi-
+cally placed electrodes covering fronto-central and pari-
+etal cortical areas were included to capture ErrP activity.
+Each subject executed 3 experimental sessions, which
+consisted of 5 runs each. Each run lasted approximately 6
+minutes, and included 100 trials performed with the sub-
+ject’s dominant hand, for a total of 1500 trials per subject.
+Subject S1 of this study exectuted an additional 3 ses-
+sions of 3 runs each, for a total of 2400 trials. The exper-
+imental task consisted in performing a fast goal-directed
+reaching movement towards a visual target located in the
+center of the screen (Fig. 1). Prior to the initiation of the
+trial, participants were required to move the mouse to the
+starting position in the bottom center of the screen. Af-
+ter 1000ms with the mouse placed at this starting point,
+a small white fixation cross was automatically shown as
+a warning signal in the centre of the screen. The fixa-
+tion cross preceded the target onset by a variable period
+(300 or 800ms) to avoid participants from predicting the
+timing of that onset. Trials with (34%) and without (66%)
+target displacement were presented in pseudo-random or-
+der. In non-displaced trials, the target remained static in
+the center of the screen. In displaced trials, however, the
+target showed an unexpected 10.5cm (400 pixels) lateral
+displacement–to the left or to the right with a 50-50%
+chance-, after the initiation of the reaching movement.
+The movement onset was detected by a 50 mm/s velocity
+threshold of the mouse movement. The target displace-
+ment was timed exactly at the movement onset (maxi-
+mum 6 ms delay due to technical limitations of the exper-
+imental protocol) to assure that participants did not have
+relevant visual cues about the final position of the target
+during the initial movement planning.
+The total longitudinal distance between the starting point
+and the target was 30 cm (1200 pixels) in the screen. The
+ratio between the distance travelled by the mouse in the
+real world and the cursor in the screen was 2:3, that is,
+when the mouse moved for example by 20 cm, the cursor
+advanced by 30 cm in the screen. To discard trials with
+long reaction times, a warning sound was provided when
+the velocity threshold required to start the movement was
+not reached during the 500 ms that followed the target
+onset. Participants were instructed to hit the target as fast
+and as accurate as possible performing a ballistic move-
+ment, exhibiting maximum velocities and accelerations
+over a very short period of time. When the target was
+displaced, participants had to adjust their hand trajectory
+to succeed in hitting the target in its final location. The
+target was presented for 1000 ms. At the end of the reach-
+ing movement, participants brought their hand back to the
+starting point, and prepared to start the next trial. Partici-
+pants were instructed not to move their trunk with respect
+to the chair and avoid head movements.
+Data Analysis and Evaluation:
+EEG data were band-passed with a Butterworth filter
+within [1-20] Hz to remove signal drifts and isolate the
+spectral range within which ErrP components are known
+to be found [7]. The final epochs considered for anal-
+ysis corresponded to the trial segment [-1, 1] s where
+t = 0 s the movement onset. Subsequently, automatic ar-
+tifact removal with FORCe [30] and DC removal baselin-
+ing were applied to each epoch. Finally, we removed
+all epochs whose maximum filtered amplitude exceeded
+100 µV . We assessed the statistical significance of the
+difference in amplitude among trials of a subject with
+(Error) and without (Correct) displacement through two-
+sided, unpaired t-tests with a = 0.05 and Bonferroni cor-
+rection for multiple ( N = 8000, 8 channels × 1000 time
+points) comparisons. Two-class (Correct vs Error) classi-
+fication accuracy is derived with 10-fold cross-validation
+employing a binary Decision Tree (DT) classifier. DT is
+selected for a first attempt to classify these novel ErrPs
+as less vulnerable to overfitting and class-bias than other
+shallow models (including linear or quadratic discrimi-
+nant analysis with regularization/shrinkage), taking into
+account the fact that there are double Correct than Error
+trials in the dataset. The 100-best, in terms of r2 feature
+fitness, spatio-temporal amplitude features are selected
+using the fold’s training data. Average and standard devi-
+ation (across folds) of the total and class-wise classifica-
+tion accuracy are reported per subject.
+RESULTS
+We present results on 2306 trials of S1 and 1494 trials of
+S2 that survived the trial rejection. Fig. 2 and 3 estab-
+lish beyond doubt both the elicitation of evoked poten-
+tials during the performance of this protocol’s task, and
+the fact that pronounced and statistically significant dif-
+ferences exist between Correct (with no target displace-
+ment) and Error (with target displacement) trials. The
+grand average waveforms are consistent across subjects.
+Correct trials (blue) exhibit a large positive peak around
+t = 500 ms from movement/displacement onset ( t =
+0 ms), followed by a very small “refractory” negative
+peak at t = 680 ms for S1; this is completely absent for
+S2. Early negative peaks can be also identified around
+t = 260 ms, especially for S2 and for Error trials. On
+the other hand, Error trials (red) show a similar shape,
+which is however delayed: the large positive peak is lo-
+cated around t = 600 ms and the refractory negative peak
+around t = 750 ms for S1 and slightly before t = 1.0 s
+for S2. As a result, the average difference Error-Correct
+(black) demonstrates a first negative peak at t = 500 ms
+(very consistently for both subjects) ahead of a larger pos-
+itive peak in the interval t = [650,720] ms. The differ-
+ences Correct versus Error are statistically significant in
+the period [400 − 800] ms that includes both the negative
+and the positive peak, for both subjects; there are no sig-
+nificant differences outside this interval (apart from few
+very short, spurious ones), which further points to the ob-
+served effects corresponding to ErrPs.
+The grand average difference between Correct and Er-
+ror trials is very similar to that reported in the litera-
+ture for interaction ErrP in different contexts [1, 4, 7, 11,
+12]. Along the same lines, Fig. 4 shows that the derived
+waveform, despite being fairly spread for both subjects,
+is stronger in fronto-central (channels FCz, Cz) and to a
+lesser extent parietal (PO3) regions, and is not particu-
+larly lateralized (i.e., the phenomena fade out for periph-
+eral channels), which also aligns well with the findings of
+previous studies on ErrPs.
+Fig. 5 shows that above-chance classification accuracy
+can be obtained for S1 and S2 with a DT classifier dis-
+criminating Error from Correct trials. However, the clas-
+sification is biased towards the dominant Correct class,
+and only half of the ErrPs can be identified correctly.
+DISCUSSION
+The results confirm both the generation of evident ErrP
+EEG correlates in the framework of this protocol, and
+that these are similar to interaction ErrPs. However, sig-
+nificant differences are also noted. In particular, while
+the difference Error-Correct (black curve in Fig. 2 and 3)
+exhibits an anticipated “large positive, then small nega-
+Time (s)
+Potential (uV)
+S1 
+Figure 2: Grand averages of S1 trials. Correct trial average in blue, Error in red. The black line illustrates the difference Error-Correct.
+Vertical, dashed lines indicate salient time points: magenta for t = 0 ms (basllistic movement onset) and green for t = 500 ms. Yellow
+circles illustrate statistically significant difference between Error and Correct amplitudes for this time point.
+Potential (uV)
+S2
+Time (s)
+Figure 3: Grand averages of S2 trials. See Fig. 2 caption for details.
+tive peak” pattern on grand averages [1, 4, 7, 11, 12],
+compared to the literature, both peaks seem to be de-
+layed by approximately 100-200 ms (Fig. 4). Another,
+maybe more peculiar, discrepancy concerns the manifes-
+(S1) 
+S1, max, t=654ms S1, min, t=504ms 
+S2, max, t=726ms S2, min, t=496ms 
+Figure 4: Topographic distribution of the average EEG ampli-
+tude difference Error-Correct within the narrow 8-channel lay-
+out used, for the maximum statistically significant positive dif-
+ference peak (left) and the minimum, statistically significant
+negative difference peak (right) for subjects S1 (top) and S2
+(bottom). Text on top of the plots specifies the exact time point
+where the corresponding peaks shown are located. Bright yel-
+low indicates large positive average difference, deep blue large
+negative average difference, and green no average difference.
+Figure 5: Average and standard deviation (across cross-
+validation folds) of the Total and class-wise (Correct, Error)
+classification accuracy for subjects S1 (blue) and S2 (red). The
+horizontal, dashed, light blue line marks the 58% random clas-
+sification threshold [31].
+tation of profound, strong peaks also in Correct trials. In
+relevant works, the Error-Correct curve’s average wave-
+form seems to result from the corresponding modulation
+in Error trials alone, with Correct trials remaining flat [1,
+12], or only reaching modest peak amplitudes [11] (much
+smaller than that of Error trials). On the contrary, here we
+denote for both subjects a similar signature for both dis-
+placed and non-displaced target trials, whose peaks are of
+comparable amplitude; consequently, the Error-Correct
+grand average resembles that of regular interaction ErrPs
+solely due to the fact that ErrPs are delayed with respect
+to Correct potentials.
+One possible explanation is that both Correct and Error
+patterns may receive contributions by Visually Evoked
+Potentials generated by the target stimulus appearances,
+resulting (through some complex and currently unclear
+process) in the observed waveform shapes. The delayed
+Error signature seems to somewhat align with this theory.
+Of note, the original target stimulus happens at a random,
+subject-dependent time in the interval [-0.5,0] ms before
+the movement onset (t = 0) (the trial was discarded if no
+movement occurred within 0.5 s after the target projec-
+tion). The displaced target appearance (only for Error tri-
+als) happens at most 6 ms after t = 0. Hence, the derived
+signatures cannot be explained on the basis of Visually
+Evoked Potential (VEP) contributions alone. The high
+mental workload exerted here could also be implicated
+with the delayed responses.
+Whatever the rationale behind the features of the ErrPs
+emerging in this protocol, strong peaks in Correct trials
+render their single-trial detection a particularly difficult
+task, as shown by the compromised classification accu-
+racy obtained (yet, significantly above the random classi-
+fication level overall [31]).
+CONCLUSION
+Our two-case study corroborates the elicitation of ErrP
+EEG signals in an extremely hurried eye-hand coordina-
+tion task comprising “ballistic” computer mouse move-
+ments, and substantiates that the corresponding signa-
+tures are similar to the interaction ErrPs described in the
+relevant literature for various protocols involving EEG-
+monitored error processing. We show that these ErrPs
+can be recognized in single-trial by means of a shallow
+classifier, albeit accurate classification seems to be chal-
+lenging. These preliminary results suggest that it may be
+possible to detect errors from EEG even under extremely
+tight time constraints of the underlying task, thus poten-
+tially enabling automatic ErrP-based error correction in
+rushed, real-world BCI and HCI scenarios. Future work
+entails confirming these results using data from all partic-
+ipants, delving into the mechanisms leading to this kind
+of novel ErrPs and improving the classification outcome
+leveraging the large number of subjects and trials avail-
+able to apply deep and transfer learning techniques.
+REFERENCES
+[1] Chavarriaga R, Sobolewski A, Millán JdR. Er-
+rare machinale est: The use of error-related potentials
+in brain-machine interfaces. Frontiers in Neuroscience.
+2014;8.
+[2] Chaudhary U, Birbaumer N, Ramos-Murguialday A.
+Brain–computer interfaces for communication and reha-
+bilitation. Nature Reviews Neurology. 2016;12(9):513–
+525.
+[3] Pires G, Castelo-Branco M, Guger C, Cisotto G. Ed-
+itorial: Error-related potentials: Challenges and applica-
+tions. Frontiers in Human Neuroscience. 2022;16.
+[4] Ferrez PW, Millán JdR. Error-related EEG poten-
+tials generated during simulated brain–computer inter-
+action. IEEE Transactions on Biomedical Engineering.
+2008;55(3):923–929.
+[5] Hoffmann S, Falkenstein M. Predictive informa-
+tion processing in the brain: Errors and response
+monitoring. International Journal of Psychophysiology.
+2012;83(2):208–212.
+[6] Milekovic T, Ball T, Schulze-Bonhage A, Aertsen A,
+Mehring C. Error-related electrocorticographic activity in
+humans during continuous movements. Journal of Neural
+Engineering. 2012;9(2):026007.
+[7] Spüler M, Niethammer C. Error-related potentials
+during continuous feedback: using EEG to detect errors
+of different type and severity. Frontiers in Human Neuro-
+science. 2015;9.
+[8] Spüler M, Bensch M, Kleih S, Rosenstiel W, Bog-
+dan M, Kübler A. Online use of error-related potentials in
+healthy users and people with severe motor impairment
+increases performance of a P300-BCI. Clinical Neuro-
+physiology. 2012;123(7):1328–1337.
+[9] Schmidt NM, Blankertz B, Treder MS. Online detec-
+tion of error-related potentials boosts the performance of
+mental typewriters. BMC Neuroscience. 2012;13(1).
+[10] Cruz A, Pires G, Nunes UJ. Double ErrP Detection
+for Automatic Error Correction in an ERP-Based BCI
+Speller. IEEE Transactions on Neural Systems and Re-
+habilitation Engineering. 2018;26(1):26–36.
+[11] Bevilacqua M, Perdikis S, Millán JdR. On error-
+related potentials during sensorimotor-based brain-
+computer interface: Explorations with a pseudo-online
+brain-controlled speller. IEEE Open Journal of Engineer-
+ing in Medicine and Biology. 2019;1:17–22.
+[12] Lopes-Dias C, Sburlea AI, Müller-Putz GR. Online
+asynchronous decoding of error-related potentials dur-
+ing the continuous control of a robot. Scientific Reports.
+2019;9(1).
+[13] Iwane F, Iturrate I, Chavarriaga R, Millán JdR. In-
+variability of EEG error-related potentials during contin-
+uous feedback protocols elicited by erroneous actions at
+predicted or unpredicted states. Journal of Neural Engi-
+neering. 2021;18(4):046044.
+[14] Iwane F, Sobolewski A, Chavarriaga R, Millán
+JdR. EEG error-related potentials encode magnitude of
+errors and individual perceptual thresholds. iScience.
+2023;26(9):107524.
+[15] Perdikis S, Millan JdR. Brain-machine interfaces: A
+tale of two learners. IEEE Systems, Man, and Cybernetics
+Magazine. 2020;6(3):12–19.
+[16] Llera A, Gerven M van, Gómez V, Jensen O, Kap-
+pen H. On the use of interaction error potentials for
+adaptive brain computer interfaces. Neural Networks.
+2011;24(10):1120–1127.
+[17] Kim SK, Kirchner EA, Stefes A, Kirchner F. In-
+trinsic interactive reinforcement learning – using error-
+related potentials for real world human-robot interaction.
+Scientific Reports. 2017;7(1).
+[18] Ehrlich SK, Cheng G. Human-agent co-adaptation
+using error-related potentials. Journal of Neural Engi-
+neering. 2018;15(6):066014.
+[19] Chavarriaga R, Millan JdR. Learning from EEG
+error-related potentials in noninvasive brain-computer in-
+terfaces. IEEE Transactions on Neural Systems and Re-
+habilitation Engineering. 2010;18(4):381–388.
+[20] Iturrate I, Chavarriaga R, Montesano L, Minguez J,
+Millán JdR. Teaching brain-machine interfaces as an al-
+ternative paradigm to neuroprosthetics control. Scientific
+Reports. 2015;5(1).
+[21] Millan J, Mouriño J. Asynchronous BCI and local
+neural classifiers: an overview of the adaptive brain inter-
+face project. IEEE Transactions on Neural Systems and
+Rehabilitation Engineering. 2003;11(2):159–161.
+[22] Iturrate I, Montesano L, Minguez J. Task-dependent
+signal variations in EEG error-related potentials for
+brain–computer interfaces. Journal of Neural Engineer-
+ing. 2013;10(2):026024.
+[23] Usama N, Niazi IK, Dremstrup K, Jochumsen M.
+Detection of error-related potentials in stroke patients
+from EEG using an artificial neural network. Sensors
+(Basel). 2021;21(18):6274.
+[24] Si-Mohammed H et al. Detecting system errors in
+virtual reality using EEG through error-related potentials.
+In: Proceedings of the IEEE Conference on Virtual Real-
+ity and 3D User Interfaces, VR 2020. United States, Mar.
+2020, 653–661.
+[25] Kreilinger A, Neuper C, Müller-Putz GR. Error
+potential detection during continuous movement of an
+artificial arm controlled by brain–computer interface.
+Medical and Biological Engineering and Computing.
+2012;50(3):223–230.
+[26] Lopes Dias C, Sburlea AI, Müller-Putz GR. Masked
+and unmasked error-related potentials during continu-
+ous control and feedback. Journal of Neural Engineering.
+2018;15(3):036031.
+[27] Omedes J, Iturrate I, Minguez J, Montesano L.
+Analysis and asynchronous detection of gradually un-
+folding errors during monitoring tasks. Journal of Neural
+Engineering. 2015;12(5):056001.
+[28] Bard C, Turrell Y, Fleury M, Teasdale N, Lamarre
+Y, Martin O. Deafferentation and pointing with visual
+double-step perturbations. Experimental Brain Research.
+1999;125(4):410–416.
+[29] Nitsche MA, Paulus W. Excitability changes in-
+duced in the human motor cortex by weak transcranial
+direct current stimulation. The Journal of Physiology.
+2000;527(Pt 3):633.
+[30] Daly I, Scherer R, Billinger M, Müller-Putz
+G. FORCe: Fully online and automated artifact re-
+moval for brain-computer interfacing. IEEE Transac-
+tions on Neural Systems and Rehabilitation Engineering.
+2014;23(5):725–736.
+[31] Müller-Putz G, Scherer R, Brunner C, Leeb R,
+Pfurtscheller G. Better than random? A closer look
+on BCI results. International Journal of Bioelectromag-
+netism. 2008;10(1):52–55.

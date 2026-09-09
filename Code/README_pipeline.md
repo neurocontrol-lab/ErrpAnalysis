@@ -1,0 +1,18 @@
+# New MATLAB pipeline
+
+Run from MATLAB with Code on the path, in order:
+
+```matlab
+test_event_parser
+stage01_parse_events
+stage02_preprocess_epochs
+stage03_plot_errp
+```
+
+Configuration is in config.m. Signal Processing Toolbox and Statistics and Machine Learning Toolbox are required. Originals and legacy MAT files are never overwritten; reruns replace only output/pipeline_v1 products.
+
+Stage 1 reads the run-pattern files for S1=spe30 and S2=mle01, matches mouse logs by subject/session/run suffix, and records trial identities and raw sample positions. Missing/duplicate event sequences or mouse disagreements are invalid, not silently labelled correct. The manifest explicitly excludes training; this does not yet resolve the historic S1 paper count.
+
+Stage 2 filters continuous finite segments at 1–20 Hz, splits at data loss/timestamp gaps, and conservatively rejects epochs within two seconds of segment edges. This guard is a configurable heuristic, not a mathematical bound on filter transients. Uses a -200 to 0 ms mean baseline and absolute-amplitude rejection at 100 microvolts. These are explicit new choices, not an exact reproduction of legacy preprocessing. No FORCe implementation is available or claimed. Final epochs are movement-locked [-1,1), 1000 samples, in microvolts. Rejected rows stay NaN; use trials.accepted to select rows. Never concatenate label files independently of their epoch metadata.
+
+Stage 3 gives subject-level averages and Error-minus-Correct differences, with two-sided equal-variance unpaired t-tests and Bonferroni across 8000 comparisons. These are descriptive reproduction diagnostics, not proof of an ErrP mechanism. It does not perform classification, topographies or feature selection. Those stages follow the agreed figure/metadata validation.

@@ -1,0 +1,958 @@
+[
+  {
+    "subject": "spe30",
+    "file": "20180717152415_spe30_pre_run1_EEG.easy",
+    "samples": 178157,
+    "event_counts": {
+      "100": 101,
+      "200": 100,
+      "255": 285,
+      "300": 100,
+      "400": 100,
+      "500": 34
+    },
+    "extracted_movement_trials": 100,
+    "timestamp_steps_ms": {
+      "2": 178156
+    },
+    "saved_trials_shape": [
+      100,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 66,
+      "2": 34
+    },
+    "labels_match": true
+  },
+  {
+    "subject": "spe30",
+    "file": "20180717153038_spe30_pre_run2_EEG.easy",
+    "samples": 289368,
+    "event_counts": {
+      "100": 101,
+      "200": 100,
+      "255": 1923,
+      "300": 100,
+      "400": 100,
+      "500": 34
+    },
+    "extracted_movement_trials": 100,
+    "timestamp_steps_ms": {
+      "2": 289367
+    },
+    "saved_trials_shape": [
+      100,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 66,
+      "2": 34
+    },
+    "labels_match": true
+  },
+  {
+    "subject": "spe30",
+    "file": "20180717154033_spe30_pre_run3_EEG.easy",
+    "samples": 180807,
+    "event_counts": {
+      "100": 102,
+      "200": 101,
+      "255": 4189,
+      "300": 101,
+      "400": 100,
+      "500": 34
+    },
+    "extracted_movement_trials": 100,
+    "timestamp_steps_ms": {
+      "2": 180806
+    },
+    "saved_trials_shape": [
+      99,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 66,
+      "2": 33
+    },
+    "labels_match": false
+  },
+  {
+    "subject": "spe30",
+    "file": "20180717161548_spe30_post_run1_EEG.easy",
+    "samples": 224866,
+    "event_counts": {
+      "100": 101,
+      "200": 100,
+      "255": 1,
+      "300": 100,
+      "400": 100,
+      "500": 34
+    },
+    "extracted_movement_trials": 100,
+    "timestamp_steps_ms": {
+      "2": 224865
+    },
+    "saved_trials_shape": [
+      100,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 66,
+      "2": 34
+    },
+    "labels_match": true
+  },
+  {
+    "subject": "spe30",
+    "file": "20180717162417_spe30_post_run2_EEG.easy",
+    "samples": 197883,
+    "event_counts": {
+      "100": 101,
+      "200": 100,
+      "300": 100,
+      "400": 100,
+      "500": 34
+    },
+    "extracted_movement_trials": 100,
+    "timestamp_steps_ms": {
+      "2": 197882
+    },
+    "saved_trials_shape": [
+      100,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 66,
+      "2": 34
+    },
+    "labels_match": true
+  },
+  {
+    "subject": "spe30",
+    "file": "20180717163116_spe30_post_run3_EEG.easy",
+    "samples": 189496,
+    "event_counts": {
+      "100": 101,
+      "200": 100,
+      "300": 100,
+      "400": 100,
+      "500": 34
+    },
+    "extracted_movement_trials": 100,
+    "timestamp_steps_ms": {
+      "2": 189495
+    },
+    "saved_trials_shape": [
+      100,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 66,
+      "2": 34
+    },
+    "labels_match": true
+  },
+  {
+    "subject": "spe30",
+    "file": "20180718110701_spe30_pre_run1_EEG.easy",
+    "samples": 194315,
+    "event_counts": {
+      "100": 101,
+      "200": 100,
+      "255": 137,
+      "300": 100,
+      "400": 100,
+      "500": 34
+    },
+    "extracted_movement_trials": 100,
+    "timestamp_steps_ms": {
+      "2": 194314
+    },
+    "saved_trials_shape": [
+      100,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 66,
+      "2": 34
+    },
+    "labels_match": true
+  },
+  {
+    "subject": "spe30",
+    "file": "20180718111337_spe30_pre_run2_EEG.easy",
+    "samples": 180310,
+    "event_counts": {
+      "100": 101,
+      "200": 100,
+      "300": 100,
+      "400": 100,
+      "500": 34
+    },
+    "extracted_movement_trials": 100,
+    "timestamp_steps_ms": {
+      "2": 180309
+    },
+    "saved_trials_shape": [
+      100,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 66,
+      "2": 34
+    },
+    "labels_match": true
+  },
+  {
+    "subject": "spe30",
+    "file": "20180718112118_spe30_pre_run3_EEG.easy",
+    "samples": 180433,
+    "event_counts": {
+      "100": 101,
+      "200": 100,
+      "255": 1,
+      "300": 100,
+      "400": 100,
+      "500": 34
+    },
+    "extracted_movement_trials": 100,
+    "timestamp_steps_ms": {
+      "2": 180432
+    },
+    "saved_trials_shape": [
+      100,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 66,
+      "2": 34
+    },
+    "labels_match": true
+  },
+  {
+    "subject": "spe30",
+    "file": "20180718112736_spe30_pre_run4_EEG.easy",
+    "samples": 195799,
+    "event_counts": {
+      "100": 101,
+      "200": 100,
+      "300": 100,
+      "400": 100,
+      "500": 34
+    },
+    "extracted_movement_trials": 100,
+    "timestamp_steps_ms": {
+      "2": 195798
+    },
+    "saved_trials_shape": [
+      100,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 66,
+      "2": 34
+    },
+    "labels_match": true
+  },
+  {
+    "subject": "spe30",
+    "file": "20180718113509_spe30_pre_run5_EEG.easy",
+    "samples": 170538,
+    "event_counts": {
+      "100": 101,
+      "200": 100,
+      "300": 100,
+      "400": 100,
+      "500": 34
+    },
+    "extracted_movement_trials": 100,
+    "timestamp_steps_ms": {
+      "2": 170537
+    },
+    "saved_trials_shape": [
+      100,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 66,
+      "2": 34
+    },
+    "labels_match": true
+  },
+  {
+    "subject": "spe30",
+    "file": "20180718121248_spe30_post_run1_EEG.easy",
+    "samples": 206754,
+    "event_counts": {
+      "100": 101,
+      "200": 100,
+      "255": 27,
+      "300": 100,
+      "400": 100,
+      "500": 34
+    },
+    "extracted_movement_trials": 100,
+    "timestamp_steps_ms": {
+      "2": 206753
+    },
+    "saved_trials_shape": [
+      100,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 66,
+      "2": 34
+    },
+    "labels_match": true
+  },
+  {
+    "subject": "spe30",
+    "file": "20180718122007_spe30_post_run2_EEG.easy",
+    "samples": 176426,
+    "event_counts": {
+      "100": 101,
+      "200": 100,
+      "255": 232,
+      "300": 100,
+      "400": 100,
+      "500": 34
+    },
+    "extracted_movement_trials": 100,
+    "timestamp_steps_ms": {
+      "2": 176425
+    },
+    "saved_trials_shape": [
+      100,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 66,
+      "2": 34
+    },
+    "labels_match": true
+  },
+  {
+    "subject": "spe30",
+    "file": "20180718122612_spe30_post_run3_EEG.easy",
+    "samples": 165232,
+    "event_counts": {
+      "100": 101,
+      "200": 100,
+      "255": 234,
+      "300": 100,
+      "400": 100,
+      "500": 34
+    },
+    "extracted_movement_trials": 100,
+    "timestamp_steps_ms": {
+      "2": 165231
+    },
+    "saved_trials_shape": [
+      100,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 66,
+      "2": 34
+    },
+    "labels_match": true
+  },
+  {
+    "subject": "spe30",
+    "file": "20180718123205_spe30_post_run4_EEG.easy",
+    "samples": 172948,
+    "event_counts": {
+      "100": 101,
+      "200": 100,
+      "300": 100,
+      "400": 100,
+      "500": 34
+    },
+    "extracted_movement_trials": 100,
+    "timestamp_steps_ms": {
+      "2": 172947
+    },
+    "saved_trials_shape": [
+      100,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 66,
+      "2": 34
+    },
+    "labels_match": true
+  },
+  {
+    "subject": "spe30",
+    "file": "20180718123801_spe30_post_run5_EEG.easy",
+    "samples": 180520,
+    "event_counts": {
+      "100": 101,
+      "200": 100,
+      "300": 100,
+      "400": 100,
+      "500": 34
+    },
+    "extracted_movement_trials": 100,
+    "timestamp_steps_ms": {
+      "2": 180519
+    },
+    "saved_trials_shape": [
+      100,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 66,
+      "2": 34
+    },
+    "labels_match": true
+  },
+  {
+    "subject": "spe30",
+    "file": "20180719113505_spe30_retest_run1_EEG.easy",
+    "samples": 169694,
+    "event_counts": {
+      "100": 101,
+      "200": 100,
+      "300": 100,
+      "400": 100,
+      "500": 34
+    },
+    "extracted_movement_trials": 100,
+    "timestamp_steps_ms": {
+      "2": 169693
+    },
+    "saved_trials_shape": [
+      100,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 66,
+      "2": 34
+    },
+    "labels_match": true
+  },
+  {
+    "subject": "spe30",
+    "file": "20180719114553_spe30_retest_run2_EEG.easy",
+    "samples": 165281,
+    "event_counts": {
+      "100": 102,
+      "200": 101,
+      "300": 101,
+      "400": 100,
+      "500": 34
+    },
+    "extracted_movement_trials": 100,
+    "timestamp_steps_ms": {
+      "2": 165280
+    },
+    "saved_trials_shape": [
+      100,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 66,
+      "2": 34
+    },
+    "labels_match": true
+  },
+  {
+    "subject": "spe30",
+    "file": "20180719120122_spe30_retest_run3_EEG.easy",
+    "samples": 163867,
+    "event_counts": {
+      "100": 101,
+      "200": 100,
+      "255": 1,
+      "300": 100,
+      "400": 100,
+      "500": 34
+    },
+    "extracted_movement_trials": 100,
+    "timestamp_steps_ms": {
+      "2": 163866
+    },
+    "saved_trials_shape": [
+      100,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 66,
+      "2": 34
+    },
+    "labels_match": true
+  },
+  {
+    "subject": "spe30",
+    "file": "20180719120700_spe30_retest_run4_EEG.easy",
+    "samples": 167682,
+    "event_counts": {
+      "100": 101,
+      "200": 100,
+      "300": 100,
+      "400": 100,
+      "500": 34
+    },
+    "extracted_movement_trials": 100,
+    "timestamp_steps_ms": {
+      "2": 167681
+    },
+    "saved_trials_shape": [
+      100,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 66,
+      "2": 34
+    },
+    "labels_match": true
+  },
+  {
+    "subject": "spe30",
+    "file": "20180719121252_spe30_retest_run5_EEG.easy",
+    "samples": 196146,
+    "event_counts": {
+      "100": 101,
+      "200": 100,
+      "255": 1,
+      "300": 100,
+      "400": 100,
+      "500": 34
+    },
+    "extracted_movement_trials": 100,
+    "timestamp_steps_ms": {
+      "2": 196145
+    },
+    "saved_trials_shape": [
+      100,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 66,
+      "2": 34
+    },
+    "labels_match": true
+  },
+  {
+    "subject": "mle01",
+    "file": "20181112091842_mle01_pre_run1_EEG.easy",
+    "samples": 232304,
+    "event_counts": {
+      "100": 101,
+      "200": 100,
+      "300": 100,
+      "400": 100,
+      "500": 34
+    },
+    "extracted_movement_trials": 100,
+    "timestamp_steps_ms": {
+      "2": 232303
+    },
+    "saved_trials_shape": [
+      100,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 66,
+      "2": 34
+    },
+    "labels_match": true
+  },
+  {
+    "subject": "mle01",
+    "file": "20181112092632_mle01_pre_run2_EEG.easy",
+    "samples": 224393,
+    "event_counts": {
+      "100": 100,
+      "200": 100,
+      "255": 2,
+      "300": 100,
+      "400": 99,
+      "500": 34
+    },
+    "extracted_movement_trials": 99,
+    "timestamp_steps_ms": {
+      "2": 224392
+    },
+    "saved_trials_shape": [
+      99,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 65,
+      "2": 34
+    },
+    "labels_match": true
+  },
+  {
+    "subject": "mle01",
+    "file": "20181112093602_mle01_pre_run3_EEG.easy",
+    "samples": 214067,
+    "event_counts": {
+      "100": 100,
+      "200": 100,
+      "255": 1604,
+      "300": 100,
+      "400": 100,
+      "500": 34
+    },
+    "extracted_movement_trials": 100,
+    "timestamp_steps_ms": {
+      "2": 214066
+    },
+    "saved_trials_shape": [
+      100,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 66,
+      "2": 34
+    },
+    "labels_match": true
+  },
+  {
+    "subject": "mle01",
+    "file": "20181112094326_mle01_pre_run4_EEG.easy",
+    "samples": 218116,
+    "event_counts": {
+      "100": 100,
+      "200": 100,
+      "300": 100,
+      "400": 100,
+      "500": 34
+    },
+    "extracted_movement_trials": 100,
+    "timestamp_steps_ms": {
+      "2": 218115
+    },
+    "saved_trials_shape": [
+      100,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 66,
+      "2": 34
+    },
+    "labels_match": true
+  },
+  {
+    "subject": "mle01",
+    "file": "20181112095047_mle01_pre_run5_EEG.easy",
+    "samples": 222521,
+    "event_counts": {
+      "100": 100,
+      "200": 100,
+      "300": 100,
+      "400": 100,
+      "500": 34
+    },
+    "extracted_movement_trials": 100,
+    "timestamp_steps_ms": {
+      "2": 222520
+    },
+    "saved_trials_shape": [
+      100,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 66,
+      "2": 34
+    },
+    "labels_match": true
+  },
+  {
+    "subject": "mle01",
+    "file": "20181112103246_mle01_post_run1_EEG.easy",
+    "samples": 255467,
+    "event_counts": {
+      "100": 100,
+      "200": 100,
+      "255": 1,
+      "300": 100,
+      "400": 100,
+      "500": 34
+    },
+    "extracted_movement_trials": 100,
+    "timestamp_steps_ms": {
+      "2": 255466
+    },
+    "saved_trials_shape": [
+      100,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 66,
+      "2": 34
+    },
+    "labels_match": true
+  },
+  {
+    "subject": "mle01",
+    "file": "20181112104125_mle01_post_run2_EEG.easy",
+    "samples": 229957,
+    "event_counts": {
+      "100": 100,
+      "200": 100,
+      "300": 100,
+      "400": 100,
+      "500": 34
+    },
+    "extracted_movement_trials": 100,
+    "timestamp_steps_ms": {
+      "2": 229956
+    },
+    "saved_trials_shape": [
+      100,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 66,
+      "2": 34
+    },
+    "labels_match": true
+  },
+  {
+    "subject": "mle01",
+    "file": "20181112104936_mle01_post_run3_EEG.easy",
+    "samples": 229956,
+    "event_counts": {
+      "100": 100,
+      "200": 100,
+      "255": 2960,
+      "300": 100,
+      "400": 100,
+      "500": 34
+    },
+    "extracted_movement_trials": 100,
+    "timestamp_steps_ms": {
+      "2": 229955
+    },
+    "saved_trials_shape": [
+      99,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 67,
+      "2": 32
+    },
+    "labels_match": false
+  },
+  {
+    "subject": "mle01",
+    "file": "20181112105723_mle01_post_run4_EEG.easy",
+    "samples": 220247,
+    "event_counts": {
+      "100": 100,
+      "200": 100,
+      "300": 100,
+      "400": 99,
+      "500": 33
+    },
+    "extracted_movement_trials": 99,
+    "timestamp_steps_ms": {
+      "2": 220246
+    },
+    "saved_trials_shape": [
+      99,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 66,
+      "2": 33
+    },
+    "labels_match": true
+  },
+  {
+    "subject": "mle01",
+    "file": "20181112110453_mle01_post_run5_EEG.easy",
+    "samples": 237760,
+    "event_counts": {
+      "100": 100,
+      "200": 100,
+      "255": 4,
+      "300": 100,
+      "400": 100,
+      "500": 34
+    },
+    "extracted_movement_trials": 100,
+    "timestamp_steps_ms": {
+      "2": 237759
+    },
+    "saved_trials_shape": [
+      100,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 66,
+      "2": 34
+    },
+    "labels_match": true
+  },
+  {
+    "subject": "mle01",
+    "file": "20181113090152_mle01_retest_run1_EEG.easy",
+    "samples": 208999,
+    "event_counts": {
+      "100": 100,
+      "200": 100,
+      "300": 100,
+      "400": 100,
+      "500": 34
+    },
+    "extracted_movement_trials": 100,
+    "timestamp_steps_ms": {
+      "2": 208998
+    },
+    "saved_trials_shape": [
+      100,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 66,
+      "2": 34
+    },
+    "labels_match": true
+  },
+  {
+    "subject": "mle01",
+    "file": "20181113090855_mle01_retest_run2_EEG.easy",
+    "samples": 207810,
+    "event_counts": {
+      "100": 100,
+      "200": 100,
+      "255": 363,
+      "300": 100,
+      "400": 99,
+      "500": 34
+    },
+    "extracted_movement_trials": 99,
+    "timestamp_steps_ms": {
+      "2": 207809
+    },
+    "saved_trials_shape": [
+      99,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 65,
+      "2": 34
+    },
+    "labels_match": true
+  },
+  {
+    "subject": "mle01",
+    "file": "20181113091555_mle01_retest_run3_EEG.easy",
+    "samples": 240271,
+    "event_counts": {
+      "100": 100,
+      "200": 100,
+      "255": 1338,
+      "300": 100,
+      "400": 100,
+      "500": 34
+    },
+    "extracted_movement_trials": 100,
+    "timestamp_steps_ms": {
+      "2": 240270
+    },
+    "saved_trials_shape": [
+      100,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 68,
+      "2": 32
+    },
+    "labels_match": false
+  },
+  {
+    "subject": "mle01",
+    "file": "20181113092450_mle01_retest_run4_EEG.easy",
+    "samples": 255543,
+    "event_counts": {
+      "100": 100,
+      "200": 100,
+      "255": 718,
+      "300": 100,
+      "400": 100,
+      "500": 34
+    },
+    "extracted_movement_trials": 100,
+    "timestamp_steps_ms": {
+      "2": 255542
+    },
+    "saved_trials_shape": [
+      99,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 66,
+      "2": 33
+    },
+    "labels_match": false
+  },
+  {
+    "subject": "mle01",
+    "file": "20181113093326_mle01_retest_run5_EEG.easy",
+    "samples": 241716,
+    "event_counts": {
+      "100": 100,
+      "200": 100,
+      "255": 3,
+      "300": 100,
+      "400": 99,
+      "500": 32
+    },
+    "extracted_movement_trials": 99,
+    "timestamp_steps_ms": {
+      "2": 241715
+    },
+    "saved_trials_shape": [
+      99,
+      2000,
+      8
+    ],
+    "saved_label_counts": {
+      "1": 67,
+      "2": 32
+    },
+    "labels_match": true
+  }
+]
