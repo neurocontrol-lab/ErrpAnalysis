@@ -1,15 +1,24 @@
-% Stage 3: subject averages and trial-level statistics, without feature selection.
+% Stage 3: separate subject/session averages and trial-level statistics.
 codeDir=fileparts(mfilename('fullpath')); addpath(codeDir); cfg=config();
-out=fullfile(cfg.output,'figures'); if ~isfolder(out), mkdir(out); end
+out=fullfile(cfg.output,'figures','by_session'); if ~isfolder(out), mkdir(out); end
+summary=table();
 for s=1:numel(cfg.subjects)
-    files=dir(fullfile(cfg.output,'processed',['*_' cfg.subjects{s} '_*_EEG.mat']));
+  for ss=1:numel(cfg.sessions)
+    session=cfg.sessions{ss};
+    files=dir(fullfile(cfg.output,'processed',['*_' cfg.subjects{s} '_' session '_run*_EEG.mat']));
     assert(~isempty(files),'No processed runs for %s',cfg.subjects{s});
-    X=[]; labels=[];
+    X=[]; labels=[]; trialMetadata=table();
     for f=1:numel(files)
         d=load(fullfile(files(f).folder,files(f).name)); keep=d.trials.accepted;
+        assert(strcmp(d.info.session,session),'Session mismatch in %s',files(f).name);
         X=cat(1,X,d.epochs(keep,:,:)); labels=[labels;d.trials.label(keep)]; %#ok<AGROW>
+        trialMetadata=[trialMetadata;d.trials(keep,:)]; %#ok<AGROW>
     end
-    assert(sum(labels==1)>=2 && sum(labels==2)>=2,'Too few retained trials');
+    summary=[summary;table(string(cfg.subjects{s}),string(session),numel(files),sum(labels==1),sum(labels==2),...
+        'VariableNames',{'subject','session','runFiles','nonDisplaced','displaced'})]; %#ok<AGROW>
+    if sum(labels==1)<2 || sum(labels==2)<2
+        warning('Too few retained trials for %s %s; skipping plot',cfg.subjects{s},session); continue;
+    end
     correct=squeeze(mean(X(labels==1,:,:),1)); displaced=squeeze(mean(X(labels==2,:,:),1));
     difference=displaced-correct; p=nan(size(correct));
     for ch=1:8
@@ -26,7 +35,10 @@ for s=1:numel(cfg.subjects)
             lg.Layout.Tile='south';
         end
     end
-    sgtitle(sprintf('%s: non-displaced n=%d, displaced n=%d; new preprocessing',cfg.subjects{s},sum(labels==1),sum(labels==2)));
-    exportgraphics(fig,fullfile(out,[cfg.subjects{s} '_averages.png'])); close(fig);
-    time=d.time; save(fullfile(out,[cfg.subjects{s} '_averages.mat']),'correct','displaced','difference','p','significant','time','labels','cfg');
+    sgtitle(sprintf('%s / %s: non-displaced n=%d, displaced n=%d',cfg.subjects{s},session,sum(labels==1),sum(labels==2)));
+    stem=[cfg.subjects{s} '_' session '_averages'];
+    exportgraphics(fig,fullfile(out,[stem '.png'])); close(fig);
+    time=d.time; save(fullfile(out,[stem '.mat']),'correct','displaced','difference','p','significant','time','labels','trialMetadata','session','cfg');
+  end
 end
+writetable(summary,fullfile(out,'session_counts.csv'));

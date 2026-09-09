@@ -28,12 +28,19 @@ for s=1:numel(cfg.subjects)
         raw=readmatrix(rawPath,'FileType','text');
         [trials,events,info]=parse_run(raw,mouse,cfg);
         info.rawPath=rawPath; info.mousePath=mousePath; info.subject=subject;
+        parts=regexp(name,'^(\d{8})\d{6}_(\w+)_(pre|post|retest)_run(\d+)_EEG.easy$','tokens','once');
+        assert(~isempty(parts),'Unrecognized run filename: %s',name);
+        info.recordingDate=parts{1}; info.session=parts{3}; info.runNumber=str2double(parts{4});
+        trials.subject=repmat(string(subject),height(trials),1);
+        trials.session=repmat(string(info.session),height(trials),1);
+        trials.recordingDate=repmat(string(info.recordingDate),height(trials),1);
+        trials.runNumber=repmat(info.runNumber,height(trials),1);
         stem=erase(name,'.easy'); parsedPath=fullfile(out,[stem '.mat']);
         save(parsedPath,'trials','events','info','cfg');
         writetable(trials,fullfile(out,[stem '_trials.csv']));
-        manifest=[manifest;table(string(subject),string(stem),string(parsedPath),...
+        manifest=[manifest;table(string(subject),string(info.session),string(info.recordingDate),info.runNumber,string(stem),string(parsedPath),...
             height(trials),sum(trials.valid),'VariableNames',...
-            {'subject','run','parsedPath','trials','validTrials'})]; %#ok<AGROW>
+            {'subject','session','recordingDate','runNumber','run','parsedPath','trials','validTrials'})]; %#ok<AGROW>
         fprintf('%s: %d/%d valid event sequences\n',stem,sum(trials.valid),height(trials));
     end
 end

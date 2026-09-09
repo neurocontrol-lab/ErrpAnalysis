@@ -6,6 +6,8 @@ All 36 run-named EEG recordings are represented in the manifest. Same-day mouse 
 
 Initial accepted counts: spe30 1387; mle01 1184. These differ from the paper because this pipeline uses explicit log validation, a different baseline, absolute-amplitude rejection and conservative loss/edge exclusion. No FORCe cleaning is applied. Do not describe these figures as an exact reproduction.
 
+Session separation was subsequently implemented and the pipeline rerun. Accepted totals are unchanged. Counts (non-displaced / displaced): spe30 pre 326/170, post 329/169, retest 260/133; mle01 pre 309/166, post 220/115, retest 241/133. Current figures are in figures/by_session. Older pooled figures are historical. Bonferroni correction applies within each subject/session's 8000 comparisons, not across the six analyses. This change does not alter the approved baseline or quality rules.
+
 Trials 76 and 78 have corrected condition labels in the new metadata, but are rejected from averaging because their windows overlap data loss/filter-edge exclusion. Legacy per-run and aggregate Labels files remain untouched.
 
 Each processed epoch has 1000 samples at 500 Hz, time -1.000 to +0.998 seconds. Invalid/rejected trials retain their metadata rows and NaN epoch slots. Accepted trials alone contribute to plots. Plot colours: blue non-displaced, red displaced, black difference, gold Bonferroni-significant difference.

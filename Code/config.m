@@ -2,6 +2,7 @@ function cfg = config()
 % Explicit settings for the new pipeline; independent of the current folder.
 cfg.root = fileparts(fileparts(mfilename('fullpath')));
 cfg.subjects = {'spe30','mle01'}; % S1, S2; run manifest remains auditable
+cfg.sessions = {'pre','post','retest'};
 cfg.runPattern = '*_run*_EEG.easy'; % excludes training and stimulation
 cfg.fs = 500;
 cfg.channels = {'P3','PO3','PO7','CP5','CP1','Cz','FCz','FC1'};
