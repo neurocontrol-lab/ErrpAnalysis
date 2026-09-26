@@ -1,4 +1,8 @@
-% Stage 1: event metadata only. Original EEG and legacy MAT files are untouched.
+% Stage 1: parse and validate events; no EEG signal processing.
+% Inputs: run-named raw EEG and matching same-day mouse logs.
+% Outputs: parsed trial tables and run manifest under cfg.output/parsed.
+% Preserve raw indices and trial identity; flag ambiguous sequences rather
+% than silently assigning a condition. Original recordings remain untouched.
 codeDir=fileparts(mfilename('fullpath')); addpath(codeDir,fullfile(codeDir,'helpers'));
 cfg=config(); out=fullfile(cfg.output,'parsed'); if ~isfolder(out), mkdir(out); end
 manifest=table();

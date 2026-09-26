@@ -1,4 +1,9 @@
-% Stage 3: separate subject/session averages and trial-level statistics.
+% Stage 3: participant/session condition averages and diagnostic plots.
+% Inputs: stage-2 processed epochs, selected strictly by trials.accepted.
+% Outputs: condition means, displaced-minus-non-displaced differences,
+% trial metadata, PNG/MAT figures and session_counts.csv.
+% Two-sided equal-variance trial-level t-tests use Bonferroni correction
+% within each participant/session (8 channels x 1000 samples).
 codeDir=fileparts(mfilename('fullpath')); addpath(codeDir); cfg=config();
 out=fullfile(cfg.output,'figures','by_session'); if ~isfolder(out), mkdir(out); end
 summary=table();

@@ -1,8 +1,8 @@
 % Read-only compatibility inspection; no analysis products are written.
 root = fileparts(fileparts(mfilename('fullpath')));
-addpath(fullfile(root,'FORCe'),fullfile(root,'mex-files'));
+addpath(fullfile(root,'Code','FORCe'),fullfile(root,'Code','FORCe','mex-files'));
 v=ver; disp(string({v.Name})');
-d=load(fullfile(root,'FORCe','EEG_example.mat'));
+d=load(fullfile(root,'Code','FORCe','EEG_example.mat'));
 fprintf('Example variables:\n'); disp(fieldnames(d));
 c=load(fullfile(root,'chanlocs8.mat')); ch=c.chanlocs8;
 for k=1:numel(ch)

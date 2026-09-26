@@ -1,4 +1,9 @@
-% Equal-subject-weighted session averages; paired inference across subjects.
+% Stage 4: session-level group averages with equal participant weights.
+% Inputs: stage-3 participant/session means and contributor counts.
+% Outputs: group PNG/MAT figures and explicit participant/trial counts.
+% Paired tests use participant mean differences, with Bonferroni correction
+% within each session. Eligibility requires two trials per condition.
+% Session comparisons do not by themselves establish a stimulation effect.
 codeDir=fileparts(mfilename('fullpath')); addpath(codeDir); cfg=config();
 source=fullfile(cfg.output,'figures','by_session');
 out=fullfile(cfg.output,'figures','group_sessions'); if ~isfolder(out), mkdir(out); end
