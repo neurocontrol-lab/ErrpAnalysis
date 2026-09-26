@@ -1,5 +1,11 @@
 # Initial validation
 
+## Full cohort run (10 September 2026)
+
+Completed all 380 recordings from 25 subjects. Event audit: 35,210 validated trial sequences; 23 runs with no validated trials. After unchanged quality rules: 30,353 accepted epochs. Generated 75 subject/session PNG/MAT pairs and three group PNG/MAT pairs. All 25 subjects meet the existing minimum of two trials per condition in each session. Pre: 6520 non-displaced + 3171 displaced; post: 7009 + 3591; retest: 6632 + 3430.
+
+Group outputs are in figures/group_sessions, with contributor tables. Numerically verified all saved group C arrays are 1000 x 8 x 25, correct equals mean(C,3), and difference equals mean(E-C,3), with finite waveforms. The known parser regression test passed. Group tests are paired across subject means and corrected within each session. Two pre-session contributors have only 10 and 11 accepted trials (rle13 and vco27), so equal weighting should be interpreted alongside contributor counts. The earlier two-subject counts below describe prior validation, not the current full cohort.
+
 Executed with MATLAB R2025a. The event-parser regression test passes on the known mle01 retest run: 34 displacement markers retained; trials 76 and 78 labelled 2; duplicated 500 samples collapsed; a missing marker flagged rather than classified as correct.
 
 All 36 run-named EEG recordings are represented in the manifest. Same-day mouse log matching is required. Six early spe30 runs lack matching same-day mouse CSVs; another spe30 run fails strict trial-start alignment. These runs remain in the audit but do not contribute epochs. This is conservative exclusion, not a claim that their EEG cannot be recovered.
