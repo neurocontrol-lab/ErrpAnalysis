@@ -17,6 +17,7 @@ cfg.fs = 500;
 cfg.channels = {'P3','PO3','PO7','CP5','CP1','Cz','FCz','FC1'};
 cfg.band = [1 20];
 cfg.filterOrder = 4;
+cfg.filterPlacement = 'split'; % 'before': bandpass first; 'split': HP -> FORCe -> LP
 cfg.window = [-1 1]; % half-open: [-1,1), 1000 samples
 cfg.baseline = [-0.2 0]; % half-open; deliberate choice, not legacy first-sample baseline
 cfg.maxAmplitudeUV = 100;
@@ -39,6 +40,13 @@ if strcmp(cfg.version,'v2')
         cfg.output = fullfile(cfg.root,'output','pipeline_v2_2s');
         cfg.comparisonOutput = fullfile(cfg.root,'output','pipeline_v2');
         cfg.comparisonLabel = 'FORCe 1 s';
+    end
+    if strcmp(cfg.filterPlacement,'split')
+        assert(cfg.forceWindowSeconds==2,'Filter-order comparison uses two-second windows');
+        cfg.output = fullfile(cfg.root,'output','pipeline_v2_filter_after');
+        cfg.comparisonOutput = fullfile(cfg.root,'output','pipeline_v2_2s');
+        cfg.comparisonLabel = 'BP then FORCe';
+        cfg.analysisLabel = 'HP then FORCe then LP';
     end
 end
 cfg.forceRoot = fullfile(cfg.root,'Code','FORCe');

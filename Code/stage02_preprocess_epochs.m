@@ -1,7 +1,8 @@
 % Stage 2: prepare, clean and quality-check movement-locked EEG epochs.
 % Inputs: validated stage-1 metadata and original recordings (nV).
-% Processing: filter valid segments, extract epochs, optionally apply FORCe,
-% then baseline and reject. Preserve all trial rows and rejection reasons.
+% Processing: high-pass valid segments, extract two-second epochs, apply
+% FORCe, low-pass, baseline and reject. The before setting retains the earlier
+% bandpass-first pipeline. Preserve all trial rows and rejection reasons.
 % Outputs: final trials x time x channels epochs and trial rejection reasons.
 % Rejected rows remain NaN. Default v2 includes all eligible spe30/mle01 runs;
 % existing v1 outputs remain read-only. Rerunning recomputes v2 outputs.
@@ -32,7 +33,13 @@ for subject=string(cfg.subjects)
 end
 manifest=manifest(selected,:); assert(~isempty(manifest),'No eligible pilot runs');
 writetable(manifest,fullfile(cfg.output,'selected_manifest.csv'));
-[b,a]=butter(cfg.filterOrder,cfg.band/(cfg.fs/2),'bandpass');
+assert(ismember(cfg.filterPlacement,{'before','split'}),'Unknown filter placement');
+if strcmp(cfg.filterPlacement,'split')
+    [b,a]=butter(cfg.filterOrder,cfg.band(1)/(cfg.fs/2),'high');
+    [bLow,aLow]=butter(cfg.filterOrder,cfg.band(2)/(cfg.fs/2),'low');
+else
+    [b,a]=butter(cfg.filterOrder,cfg.band/(cfg.fs/2),'bandpass');
+end
 offsets=round(cfg.window(1)*cfg.fs):round(cfg.window(2)*cfg.fs)-1;
 time=offsets/cfg.fs; base=time>=cfg.baseline(1) & time<cfg.baseline(2);
 assert(any(base),'Empty baseline interval'); channels=cfg.channels;
@@ -69,14 +76,23 @@ for f=1:height(manifest)
                 trials.rejection(k)="force_"+status; continue;
             end
         end
-        % Stage 2f: baseline and final rejection
+        % Stage 2f: application filter, baseline and final rejection
+        if strcmp(cfg.filterPlacement,'split')
+            % Zero-phase low-pass on each cleaned epoch; filtfilt handles endpoints.
+            % Unlike the reference's continuous filter, epoch-edge effects remain possible.
+            x=filtfilt(bLow,aLow,x);
+        end
         x=x-mean(x(base,:),1);
         if any(~isfinite(x),'all'), trials.rejection(k)="nonfinite"; continue; end
         if max(abs(x),[],'all')>cfg.maxAmplitudeUV, trials.rejection(k)="amplitude"; continue; end
         epochs(k,:,:)=x; trials.accepted(k)=true; trials.rejection(k)="ok";
     end
     % Stage 2g: save results
-    processingNote=sprintf('1-20 Hz before FORCe; %g s cleaning windows; interpolation windows excluded.',cfg.forceWindowSeconds);
+    if strcmp(cfg.filterPlacement,'split')
+        processingNote='Continuous 1 Hz HP -> 2 s FORCe -> epoch 20 Hz LP -> baseline; interpolation excluded.';
+    else
+        processingNote=sprintf('1-20 Hz before FORCe; %g s cleaning windows; interpolation windows excluded.',cfg.forceWindowSeconds);
+    end
     processingSeconds=toc(runStarted);
     save(destination,'epochs','time','channels','trials','info','cfg','processingNote','processingSeconds','-v7.3');
     writetable(trials,fullfile(out,manifest.run(f)+"_quality.csv"));

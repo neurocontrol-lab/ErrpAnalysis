@@ -2,16 +2,18 @@
 
 ## Current configuration: FORCe v2 pilot
 
-`config()` selects `output/pipeline_v2_2s` and all eligible runs for spe30 and
+`config()` selects `output/pipeline_v2_filter_after` and all eligible runs for spe30 and
 mle01 across pre, post and retest sessions. `config('v1')` exposes the historical
 settings for reference. Stage 2 refuses to write to the v1 root.
 Original recordings, legacy labels and existing `output/pipeline_v1`
 products are retained. Both participants have now been processed across all
 eligible task recordings: 29 of 36 recordings, with seven excluded because
-no trials passed event validation. The previous one-second-window results
-remain in `output/pipeline_v2`. The two-second experiment uses the same runs.
-`cfg.forceWindowSeconds` selects 1 or 2 seconds; selecting 1 also restores
-the original v2 output location and its comparison against v1.
+no trials passed event validation. The current experiment uses continuous 1 Hz high-pass filtering, two-second
+FORCe cleaning, then per-epoch 20 Hz low-pass filtering. Earlier outputs remain
+in `pipeline_v2` (one-second windows) and `pipeline_v2_2s` (two-second windows,
+bandpass before cleaning). Set `cfg.filterPlacement='before'` to restore the
+earlier order; `cfg.forceWindowSeconds` then selects its one- or two-second
+variant and output folder.
 
 ```matlab
 addpath('ErrpAnalysis/Code')
@@ -36,10 +38,11 @@ to a finite number only for a smaller trial run.
    target displacement, and retain trial identity and raw sample positions.
    Ambiguous/missing events remain invalid. Training recordings are excluded.
 2. **Preprocess epochs:** convert nV to microvolts, split at data loss and
-   timestamp gaps, filter valid continuous segments at 1-20 Hz, retain the
+   timestamp gaps, high-pass valid continuous segments at 1 Hz, retain the
    existing two-second edge guard, and extract [-1,1) movement-locked epochs.
    Clean each eligible epoch in one 1000-sample FORCe window at 500 Hz
-   when `cfg.forceWindowSeconds=2`; the 1-second setting uses two halves. Apply the [-0.2,0) baseline afterward, followed by absolute
+   when `cfg.forceWindowSeconds=2`. Apply the 20 Hz low-pass to the cleaned
+   epoch, then the [-0.2,0) baseline, followed by absolute
    100-microvolt rejection. All metadata rows remain; final rejected epochs
    are NaN. Use `trials.accepted` when analyzing the final arrays.
 3. **Participant plots:** condition averages and displaced-minus-non-displaced
@@ -86,11 +89,11 @@ cache matching, and it never writes to the v1 output root.
 `test_force_integration` is an optional quick check on one real epoch and an
 invalid input; it is not required before each analysis run.
 
-## Comparing window lengths
+## Comparing processing settings
 
 Optionally run `compare_pipeline_versions` after stages 2 and 3. It reads
-`cfg.comparisonOutput` (one-second FORCe results by default) and `cfg.output`
-(two-second results), then writes comparisons under `cfg.output/comparison`:
+`cfg.comparisonOutput` (the earlier bandpass-first, two-second results) and
+`cfg.output` (the split-filter experiment), then writes comparisons under `cfg.output/comparison`:
 
 - `common` and `own` figures: averages on identical accepted trials and on
   each method's accepted trials, respectively. Current results are solid;
@@ -103,13 +106,52 @@ Optionally run `compare_pipeline_versions` after stages 2 and 3. It reads
 - `waveform_comparison.csv`: condition-average correlation and RMS difference
   over 0.2-1 s for each channel, using common trials.
 
-Two-second cleaning removes the internal concatenation point but also changes
+The previous window-length experiment showed that two-second cleaning removes the internal concatenation point but also changes
 component estimation and rejection. It is a window-length variation from the
 one-second method; a smoother onset alone does not establish better recovery
-of physiological activity. Filter ordering, interpolation policy and all
-other processing settings are unchanged.
+of physiological activity. That experiment held filter ordering and other processing settings fixed.
 
 The previous one-second results are in
 [VALIDATION.md](../output/pipeline_v2/VALIDATION.md). The completed [window-length comparison](../output/pipeline_v2_2s/WINDOW_COMPARISON.md)
 supports the two-second setting: on 2,610 common trials, the median onset step
 decreased from 2.79 to 0.57 microvolts while nearby variation remained similar.
+
+## Filter-order experiment and rationale
+
+The current sequence is **continuous 1 Hz high-pass -> extract [-1,1) epochs ->
+FORCe -> 20 Hz low-pass -> [-0.2,0) baseline -> 100 microvolt rejection**.
+All filters use Butterworth designs with `cfg.filterOrder=4` and zero-phase
+`filtfilt`. The channel-interpolation exclusion policy and the two-second
+cleaning duration are not changed by this experiment.
+
+High-pass filtering removes DC offsets and slow drift before decomposition;
+epoch baseline correction subtracts a pre-event mean after cleaning. These
+are different operations. No epoch baseline subtraction is done before FORCe.
+The references supporting this distinction are:
+
+- [EEGLAB: Filtering](https://eeglab.org/tutorials/05_Preprocess/Filtering.html)
+  recommends high-pass filtering around 1 Hz for ICA and filtering continuous
+  data before epoching.
+- [MNE: Repairing artifacts with ICA](https://mne.tools/stable/auto_tutorials/preprocessing/40_artifact_correction_ica.html)
+  recommends high-pass filtering before ICA and baseline correction afterward,
+  because ICA cleaning can introduce offsets.
+
+These references support general ICA preprocessing practice; they do not
+validate this particular FORCe implementation or establish that moving the
+20 Hz low-pass improves artifact removal. The latter is our experimental
+hypothesis: preserve higher-frequency input for FORCe, then restrict the
+cleaned signal to the ErrP analysis band.
+
+The reference uses one combined bandpass on continuous segments. The new
+pipeline uses separate high-pass and low-pass designs and filters the cleaned
+epoch at the last step. This changes both filter response and endpoint context,
+so differences cannot be attributed exclusively to ordering. MATLAB's
+[filtfilt documentation](https://www.mathworks.com/help/signal/ref/filtfilt.html)
+describes endpoint-transient handling; filtering a short epoch can still affect
+its edges. No extra smoothing, padding scheme, or threshold adjustment is used.
+
+Results are saved separately under `output/pipeline_v2_filter_after`; the
+[completed comparison report](../output/pipeline_v2_filter_after/FILTER_ORDER_COMPARISON.md)
+summarizes retention and matched-trial waveform changes. The new sequence
+retains 2,616 trials versus 2,611, with a median condition-average correlation
+of 0.992. This does not by itself establish better artifact removal.
