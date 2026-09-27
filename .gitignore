@@ -4,3 +4,6 @@ S1CleanTrials.mat
 CleanTrials.mat
 S2CleanTrials.mat
 /data/
+
+# Temporary files
+/tmp/
