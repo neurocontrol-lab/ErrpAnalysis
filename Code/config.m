@@ -26,10 +26,20 @@ cfg.output = fullfile(cfg.root,'output',['pipeline_' cfg.version]);
 cfg.baselineOutput = fullfile(cfg.root,'output','pipeline_v1');
 cfg.parsedOutput = fullfile(cfg.baselineOutput,'parsed'); % shared event metadata for v1/v2
 cfg.cleaningMethod = 'none';
+cfg.forceWindowSeconds = 2; % compare one full epoch with the previous 1 s windows
+cfg.comparisonOutput = cfg.baselineOutput;
+cfg.comparisonLabel = 'v1';
+cfg.analysisLabel = cfg.version;
 cfg.maxRunsPerSubjectSession = Inf;
 if strcmp(cfg.version,'v2')
     cfg.subjects = {'spe30','mle01'};
     cfg.cleaningMethod = 'FORCe';
+    cfg.analysisLabel = sprintf('FORCe %g s',cfg.forceWindowSeconds);
+    if cfg.forceWindowSeconds==2
+        cfg.output = fullfile(cfg.root,'output','pipeline_v2_2s');
+        cfg.comparisonOutput = fullfile(cfg.root,'output','pipeline_v2');
+        cfg.comparisonLabel = 'FORCe 1 s';
+    end
 end
 cfg.forceRoot = fullfile(cfg.root,'Code','FORCe');
 cfg.alpha = 0.05;

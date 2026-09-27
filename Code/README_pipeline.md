@@ -2,13 +2,16 @@
 
 ## Current configuration: FORCe v2 pilot
 
-`config()` selects `output/pipeline_v2` and all eligible runs for spe30 and
+`config()` selects `output/pipeline_v2_2s` and all eligible runs for spe30 and
 mle01 across pre, post and retest sessions. `config('v1')` exposes the historical
 settings for reference. Stage 2 refuses to write to the v1 root.
 Original recordings, legacy labels and existing `output/pipeline_v1`
 products are retained. Both participants have now been processed across all
 eligible task recordings: 29 of 36 recordings, with seven excluded because
-no trials passed event validation. See the [results report](../output/pipeline_v2/VALIDATION.md).
+no trials passed event validation. The previous one-second-window results
+remain in `output/pipeline_v2`. The two-second experiment uses the same runs.
+`cfg.forceWindowSeconds` selects 1 or 2 seconds; selecting 1 also restores
+the original v2 output location and its comparison against v1.
 
 ```matlab
 addpath('ErrpAnalysis/Code')
@@ -23,7 +26,7 @@ explicitly also reuses an existing manifest. No v2/v1 location search is used.
 If the event parser or input dataset changes, explicitly choose a new parsed
 output folder in the configuration before parsing again.
 
-Selected runs are recorded in `output/pipeline_v2/selected_manifest.csv`.
+Selected runs are recorded in `selected_manifest.csv` under `cfg.output`.
 The default includes all eligible runs. Set `cfg.maxRunsPerSubjectSession`
 to a finite number only for a smaller trial run.
 
@@ -35,8 +38,8 @@ to a finite number only for a smaller trial run.
 2. **Preprocess epochs:** convert nV to microvolts, split at data loss and
    timestamp gaps, filter valid continuous segments at 1-20 Hz, retain the
    existing two-second edge guard, and extract [-1,1) movement-locked epochs.
-   Clean each eligible epoch in two independent 500-sample FORCe windows at
-   500 Hz. Apply the [-0.2,0) baseline afterward, followed by absolute
+   Clean each eligible epoch in one 1000-sample FORCe window at 500 Hz
+   when `cfg.forceWindowSeconds=2`; the 1-second setting uses two halves. Apply the [-0.2,0) baseline afterward, followed by absolute
    100-microvolt rejection. All metadata rows remain; final rejected epochs
    are NaN. Use `trials.accepted` when analyzing the final arrays.
 3. **Participant plots:** condition averages and displaced-minus-non-displaced
@@ -83,25 +86,30 @@ cache matching, and it never writes to the v1 output root.
 `test_force_integration` is an optional quick check on one real epoch and an
 invalid input; it is not required before each analysis run.
 
-## Pilot review
+## Comparing window lengths
 
-Optionally run `compare_pipeline_versions` to compare saved v1 results with
-the configured pipeline. It writes participant/session comparisons under
-`output/pipeline_v2/comparison`: identical retained trials (`common`), each
-pipeline's retained trials (`own`). A table records condition counts and
-recovered/lost trials. The comparison uses saved v1 epochs as its reference.
-Reduced amplitude alone is not evidence of successful artifact removal.
-Inspect all channels and possible boundary steps before expanding the
-subject list.
+Optionally run `compare_pipeline_versions` after stages 2 and 3. It reads
+`cfg.comparisonOutput` (one-second FORCe results by default) and `cfg.output`
+(two-second results), then writes comparisons under `cfg.output/comparison`:
 
-The 1-20 Hz-before-FORCe ordering follows the conference paper's stated
-sequence. Higher-frequency internal criteria and independent-window seams
-remain methodological concerns, not automatically corrected bugs. Exact
-historical reproduction still requires the group's settings/reference output.
-No significant ErrP mechanism or stimulation effect follows from a successful
-software test or a cleaner-looking waveform.
+- `common` and `own` figures: averages on identical accepted trials and on
+  each method's accepted trials, respectively. Current results are solid;
+  reference results are dashed.
+- `onset` figures: a closer view around movement onset on common trials.
+- `comparison_counts.csv`: retention by participant/session/condition and
+  median onset steps on common trials. Conditions 1/2 are non-displaced/displaced.
+- `onset_steps.csv`: per-trial maximum channel step from -2 ms to 0 ms, plus
+  typical nearby steps within +/-50 ms excluding the join, in microvolts.
+- `waveform_comparison.csv`: condition-average correlation and RMS difference
+  over 0.2-1 s for each channel, using common trials.
 
-Complete two-participant results are described in
-[VALIDATION.md](../output/pipeline_v2/VALIDATION.md). The movement-onset window
-join remains a methodological concern; review window placement before
-interpreting the cleaned ErrP.
+Two-second cleaning removes the internal concatenation point but also changes
+component estimation and rejection. It is a window-length variation from the
+one-second method; a smoother onset alone does not establish better recovery
+of physiological activity. Filter ordering, interpolation policy and all
+other processing settings are unchanged.
+
+The previous one-second results are in
+[VALIDATION.md](../output/pipeline_v2/VALIDATION.md). The completed [window-length comparison](../output/pipeline_v2_2s/WINDOW_COMPARISON.md)
+supports the two-second setting: on 2,610 common trials, the median onset step
+decreased from 2.79 to 0.57 microvolts while nearby variation remained similar.

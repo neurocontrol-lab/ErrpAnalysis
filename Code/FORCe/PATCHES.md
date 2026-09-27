@@ -29,8 +29,9 @@ reported `no_usable_channels` as expected.
 ## Pipeline safeguards
 
 The adapter `../helpers/clean_epoch_force.m` calls the supplied library. It
-validates dimensions, channel order and finite data, cleans two independent
-500-sample windows, and returns cleaned samples with a success/failure status.
+validates dimensions, channel order and finite data, calls FORCe using the
+configured one- or two-second windows, and returns cleaned samples with a
+success/failure status. Window length is an analysis setting, not a library fix.
 Failed windows invalidate the epoch. The pilot also rejects windows requiring
 channel interpolation, flat channels and all-component removal. These are
 pipeline quality policies, not changes to the FORCe algorithm.
@@ -41,7 +42,9 @@ The optional adapter check covers one real epoch and invalid-input handling.
 
 The positive-only 200-microvolt channel threshold, coordinate-dependent
 interpolation, IC spikiness indexing, spectral criteria after 1-20 Hz
-filtering, and discontinuities at the independent-window join remain
-unmodified and require scientific validation. Passing numerical regression
+filtering remain unchanged and require scientific validation. Independent-window
+join artifacts are addressed by the two-second pipeline setting, evaluated in
+the [window-length comparison](../../output/pipeline_v2_2s/WINDOW_COMPARISON.md);
+this is separate from library bug fixes. Passing numerical regression
 checks does not establish physiological validity; see the
 [pilot validation report](../../output/pipeline_v2/VALIDATION.md).

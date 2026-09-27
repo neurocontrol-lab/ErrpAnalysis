@@ -43,7 +43,7 @@ for s=1:numel(cfg.subjects)
             lg.Layout.Tile='south';
         end
     end
-    sgtitle(sprintf('%s / %s (FORCe pilot): non-displaced n=%d, displaced n=%d',cfg.subjects{s},session,sum(labels==1),sum(labels==2)));
+    sgtitle(sprintf('%s / %s (%s): non-displaced n=%d, displaced n=%d',cfg.subjects{s},session,cfg.analysisLabel,sum(labels==1),sum(labels==2)));
     stem=[cfg.subjects{s} '_' session '_averages'];
     exportgraphics(fig,fullfile(out,[stem '.png'])); close(fig);
     time=d.time; save(fullfile(out,[stem '.mat']),'correct','displaced','difference','p','significant','time','labels','trialMetadata','session','cfg');

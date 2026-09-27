@@ -38,6 +38,7 @@ time=offsets/cfg.fs; base=time>=cfg.baseline(1) & time<cfg.baseline(2);
 assert(any(base),'Empty baseline interval'); channels=cfg.channels;
 for f=1:height(manifest)
     % Stage 2b: load recording
+    runStarted=tic;
     p=load(manifest.parsedPath(f)); trials=p.trials; info=p.info;
     destination=fullfile(out,manifest.run(f)+".mat");
     raw=readmatrix(info.rawPath,'FileType','text'); eeg=raw(:,1:8)/1000;
@@ -75,8 +76,9 @@ for f=1:height(manifest)
         epochs(k,:,:)=x; trials.accepted(k)=true; trials.rejection(k)="ok";
     end
     % Stage 2g: save results
-    processingNote='1-20 Hz before FORCe; independent one-second windows; interpolation windows excluded.';
-    save(destination,'epochs','time','channels','trials','info','cfg','processingNote','-v7.3');
+    processingNote=sprintf('1-20 Hz before FORCe; %g s cleaning windows; interpolation windows excluded.',cfg.forceWindowSeconds);
+    processingSeconds=toc(runStarted);
+    save(destination,'epochs','time','channels','trials','info','cfg','processingNote','processingSeconds','-v7.3');
     writetable(trials,fullfile(out,manifest.run(f)+"_quality.csv"));
     fprintf('%s: accepted %d of %d trials\n',manifest.run(f),sum(trials.accepted),height(trials));
 end
