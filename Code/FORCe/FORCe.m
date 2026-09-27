@@ -1,4 +1,5 @@
-function [cleanEEG] = FORCe( EEGdata, Fs, chanLocs, useAcc )
+function [cleanEEG, diagnostics] = FORCe( EEGdata, Fs, chanLocs, useAcc )
+    % updated by Satyam: optional diagnostics output; one-output calls remain valid.
     %
     % FORCe -- changed name for confilct with another toolbox 
     %
@@ -61,6 +62,9 @@ function [cleanEEG] = FORCe( EEGdata, Fs, chanLocs, useAcc )
     %**********************************************************************
        
     % Begin function proper, check the dimmensions of the input data.   
+    % updated by Satyam: initialize diagnostics without changing cleaning decisions.
+    diagnostics = struct('status','ok','removedChannels',[], ...
+        'removedICs',[],'allICsRemoved',false);
     N = size( EEGdata,1 );
     M = size( EEGdata,2 );
     
@@ -85,7 +89,11 @@ function [cleanEEG] = FORCe( EEGdata, Fs, chanLocs, useAcc )
     % Check we have some usable data (ie. there are some channels with
     % amplitude below the 200uV threshold). If no usable date found just
     % retunr what we have (ie. retunr input without cleaning).
+    % updated by Satyam: expose channels rejected by the original threshold.
+    diagnostics.removedChannels = remCh;
     if length( unique( remCh ) ) == size( EEGdata,1 ),
+        % updated by Satyam: distinguish aborted cleaning from successful output.
+        diagnostics.status = 'no_usable_channels';
         disp( 'Error: No usable data in this EEG epoch: aborting!' );
         cleanEEG = EEGdata;
         return;
@@ -289,7 +297,12 @@ function [cleanEEG] = FORCe( EEGdata, Fs, chanLocs, useAcc )
             
             % Check number of removed ICs is not the same as the total number
             % of ICs.
+            % updated by Satyam: expose the original component rejection decisions.
+            diagnostics.removedICs = remICs;
             if length( remICs ) == size( ICs{tUse(tN)},1 ),
+                % updated by Satyam: flag all-component removal for pipeline QC.
+                diagnostics.allICsRemoved = true;
+                diagnostics.status = 'all_ics_removed';
                 disp( 'Warning: All ICs removed!' );
             end
             

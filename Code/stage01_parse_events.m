@@ -1,10 +1,16 @@
 % Stage 1: parse and validate events; no EEG signal processing.
 % Inputs: run-named raw EEG and matching same-day mouse logs.
-% Outputs: parsed trial tables and run manifest under cfg.output/parsed.
+% Outputs: shared trial tables and manifest under cfg.parsedOutput.
+% Reuse the existing manifest; parsing is independent of FORCe cleaning.
 % Preserve raw indices and trial identity; flag ambiguous sequences rather
 % than silently assigning a condition. Original recordings remain untouched.
 codeDir=fileparts(mfilename('fullpath')); addpath(codeDir,fullfile(codeDir,'helpers'));
-cfg=config(); out=fullfile(cfg.output,'parsed'); if ~isfolder(out), mkdir(out); end
+cfg=config(); out=cfg.parsedOutput;
+if isfile(fullfile(out,'manifest.csv'))
+    fprintf('Reusing parsed events: %s\n',out);
+    return;
+end
+if ~isfolder(out), mkdir(out); end
 manifest=table();
 for s=1:numel(cfg.subjects)
     subject=cfg.subjects{s}; folder=fullfile(cfg.root,'data',subject);

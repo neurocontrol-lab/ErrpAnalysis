@@ -1,4 +1,6 @@
-function cfg = config()
+function cfg = config(version)
+if nargin<1, version="v2"; end
+assert(ismember(string(version),["v1","v2"]),'Unknown pipeline version');
 % Explicit settings for the new pipeline; independent of the current folder.
 cfg.root = fileparts(fileparts(mfilename('fullpath')));
 folders=dir(fullfile(cfg.root,'data'));
@@ -19,6 +21,16 @@ cfg.window = [-1 1]; % half-open: [-1,1), 1000 samples
 cfg.baseline = [-0.2 0]; % half-open; deliberate choice, not legacy first-sample baseline
 cfg.maxAmplitudeUV = 100;
 cfg.lossGuardSeconds = 2; % conservative exclusion around loss; not a proven filter bound
-cfg.output = fullfile(cfg.root,'output','pipeline_v1');
+cfg.version = char(version);
+cfg.output = fullfile(cfg.root,'output',['pipeline_' cfg.version]);
+cfg.baselineOutput = fullfile(cfg.root,'output','pipeline_v1');
+cfg.parsedOutput = fullfile(cfg.baselineOutput,'parsed'); % shared event metadata for v1/v2
+cfg.cleaningMethod = 'none';
+cfg.maxRunsPerSubjectSession = Inf;
+if strcmp(cfg.version,'v2')
+    cfg.subjects = {'spe30','mle01'};
+    cfg.cleaningMethod = 'FORCe';
+end
+cfg.forceRoot = fullfile(cfg.root,'Code','FORCe');
 cfg.alpha = 0.05;
 end

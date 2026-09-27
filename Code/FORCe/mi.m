@@ -146,7 +146,8 @@ switch length( A ),
         nb = nb/sum(nb);
         n2 = hist2a__76_mex(A,B,L);
     case 72,
-        na = hista_72_mex(A(:),L); 
+        % updated by Satyam: use the supplied hista__72_mex binary (two underscores).
+        na = hista__72_mex(A(:),L);
         na = na/sum(na);
         nb = hista__72_mex(B(:),L);
         nb = nb/sum(nb);

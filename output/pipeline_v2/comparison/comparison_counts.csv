@@ -1,0 +1,13 @@
+subject,session,condition,v1Accepted,v2Accepted,common,recovered,lost
+spe30,pre,1,326,326,326,0,0
+spe30,pre,2,170,170,170,0,0
+spe30,post,1,329,329,329,0,0
+spe30,post,2,169,169,169,0,0
+spe30,retest,1,260,261,260,1,0
+spe30,retest,2,133,133,133,0,0
+mle01,pre,1,309,317,309,8,0
+mle01,pre,2,166,167,166,1,0
+mle01,post,1,220,235,220,15,0
+mle01,post,2,115,119,115,4,0
+mle01,retest,1,241,249,240,9,1
+mle01,retest,2,133,138,133,5,0

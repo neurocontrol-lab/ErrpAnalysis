@@ -7,10 +7,12 @@
 codeDir=fileparts(mfilename('fullpath')); addpath(codeDir); cfg=config();
 out=fullfile(cfg.output,'figures','by_session'); if ~isfolder(out), mkdir(out); end
 summary=table();
+selected=readtable(fullfile(cfg.output,'selected_manifest.csv'),'TextType','string');
 for s=1:numel(cfg.subjects)
   for ss=1:numel(cfg.sessions)
     session=cfg.sessions{ss};
     files=dir(fullfile(cfg.output,'processed',['*_' cfg.subjects{s} '_' session '_run*_EEG.mat']));
+    files=files(ismember(string({files.name}),selected.run+".mat"));
     X=[]; labels=[]; trialMetadata=table();
     for f=1:numel(files)
         d=load(fullfile(files(f).folder,files(f).name)); keep=d.trials.accepted;
@@ -32,15 +34,16 @@ for s=1:numel(cfg.subjects)
     significant=p<cfg.alpha/numel(p);
     fig=figure('Visible','off','Position',[100 100 1100 1000]); tiledlayout(4,2);
     for ch=1:8
-        nexttile; plot(d.time,correct(:,ch),'b',d.time,displaced(:,ch),'r',d.time,difference(:,ch),'k'); hold on;
-        plot(d.time(significant(:,ch)),difference(significant(:,ch),ch),'.','Color',[.7 .5 0]);
-        xline(0,'--m'); xline(.5,'--g'); title(d.channels{ch}); xlabel('Time from movement (s)'); ylabel('microvolts');
+        nexttile; h=plot(d.time,correct(:,ch),'b',d.time,displaced(:,ch),'r',d.time,difference(:,ch),'k'); hold on;
+        hs=plot(d.time(significant(:,ch)),difference(significant(:,ch),ch),'.','Color',[.7 .5 0]);
+        if isempty(hs), hs=plot(NaN,NaN,'.','Color',[.7 .5 0]); end
+        xline(0,'--m','HandleVisibility','off'); xline(.5,'--g','HandleVisibility','off'); title(d.channels{ch}); xlabel('Time from movement (s)'); ylabel('microvolts');
         if ch==1
-            lg=legend('Non-displaced','Displaced','Displaced - non-displaced','Bonferroni significant');
+            lg=legend([h;hs],{'Non-displaced','Displaced','Displaced - non-displaced','Bonferroni significant'});
             lg.Layout.Tile='south';
         end
     end
-    sgtitle(sprintf('%s / %s: non-displaced n=%d, displaced n=%d',cfg.subjects{s},session,sum(labels==1),sum(labels==2)));
+    sgtitle(sprintf('%s / %s (FORCe pilot): non-displaced n=%d, displaced n=%d',cfg.subjects{s},session,sum(labels==1),sum(labels==2)));
     stem=[cfg.subjects{s} '_' session '_averages'];
     exportgraphics(fig,fullfile(out,[stem '.png'])); close(fig);
     time=d.time; save(fullfile(out,[stem '.mat']),'correct','displaced','difference','p','significant','time','labels','trialMetadata','session','cfg');

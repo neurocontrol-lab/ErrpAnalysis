@@ -1,47 +1,107 @@
-# New MATLAB pipeline
+# MATLAB EEG pipeline
 
-Run from MATLAB with Code on the path, in order:
+## Current configuration: FORCe v2 pilot
+
+`config()` selects `output/pipeline_v2` and all eligible runs for spe30 and
+mle01 across pre, post and retest sessions. `config('v1')` exposes the historical
+settings for reference. Stage 2 refuses to write to the v1 root.
+Original recordings, legacy labels and existing `output/pipeline_v1`
+products are retained. Both participants have now been processed across all
+eligible task recordings: 29 of 36 recordings, with seven excluded because
+no trials passed event validation. See the [results report](../output/pipeline_v2/VALIDATION.md).
 
 ```matlab
-test_event_parser
-stage01_parse_events
+addpath('ErrpAnalysis/Code')
 stage02_preprocess_epochs
 stage03_plot_errp
-stage04_group_averages
 ```
 
-Configuration is in config.m. Signal Processing Toolbox and Statistics and Machine Learning Toolbox are required. Originals and legacy MAT files are never overwritten; reruns replace only output/pipeline_v1 products.
+Event parsing is shared between versions. `cfg.parsedOutput` points to
+`output/pipeline_v1/parsed`; stage 2 always reads that manifest and its parsed
+files. It calls stage 1 only when the manifest is missing. Running stage 1
+explicitly also reuses an existing manifest. No v2/v1 location search is used.
+If the event parser or input dataset changes, explicitly choose a new parsed
+output folder in the configuration before parsing again.
 
-config.m discovers all subject folders containing run-named EEG recordings (25 subjects, 380 runs at the current inventory). Stage 4 creates an equal-subject-weighted average for each session under figures/group_sessions. It includes subjects with at least two retained trials in each condition for that session. Tests operate on paired subject mean differences, not pooled trials; Bonferroni applies to 8000 comparisons within each session. The band shows +/-1 SEM of subject differences. Contributor tables record exactly which subjects and trials enter each session. Eligible subject sets can differ across sessions, so between-session comparisons are not automatically within-subject comparisons. No causal stimulation effect is inferred.
+Selected runs are recorded in `output/pipeline_v2/selected_manifest.csv`.
+The default includes all eligible runs. Set `cfg.maxRunsPerSubjectSession`
+to a finite number only for a smaller trial run.
 
-Stage 1 reads the run-pattern files for S1=spe30 and S2=mle01, matches mouse logs by subject/session/run suffix, and records trial identities and raw sample positions. Missing/duplicate event sequences or mouse disagreements are invalid, not silently labelled correct. The manifest explicitly excludes training; this does not yet resolve the historic S1 paper count.
+## Stages
 
-Stage 2 filters continuous finite segments at 1–20 Hz, splits at data loss/timestamp gaps, and conservatively rejects epochs within two seconds of segment edges. This guard is a configurable heuristic, not a mathematical bound on filter transients. Uses a -200 to 0 ms mean baseline and absolute-amplitude rejection at 100 microvolts. These are explicit new choices, not an exact reproduction of legacy preprocessing. The supplied FORCe implementation is now under Code/FORCe, but is not yet integrated or applied by stage 2. Final epochs are movement-locked [-1,1), 1000 samples, in microvolts. Rejected rows stay NaN; use trials.accepted to select rows. Never concatenate label files independently of their epoch metadata.
+1. **Parse events:** match same-day mouse logs, validate event sequences and
+   target displacement, and retain trial identity and raw sample positions.
+   Ambiguous/missing events remain invalid. Training recordings are excluded.
+2. **Preprocess epochs:** convert nV to microvolts, split at data loss and
+   timestamp gaps, filter valid continuous segments at 1-20 Hz, retain the
+   existing two-second edge guard, and extract [-1,1) movement-locked epochs.
+   Clean each eligible epoch in two independent 500-sample FORCe windows at
+   500 Hz. Apply the [-0.2,0) baseline afterward, followed by absolute
+   100-microvolt rejection. All metadata rows remain; final rejected epochs
+   are NaN. Use `trials.accepted` when analyzing the final arrays.
+3. **Participant plots:** condition averages and displaced-minus-non-displaced
+   differences, separately for each participant/session. Unpaired two-sided
+   equal-variance tests are Bonferroni-corrected over 8000 channel/time
+   comparisons within each participant/session. Only selected manifest runs
+   contribute; legend handles explicitly identify significance markers.
+4. **Group averages:** equal weights for eligible participant means and paired
+   tests of their differences, corrected within each session. This remains
+   available but is not part of the initial participant-review pilot. A group
+   computed with the pilot configuration contains two participants, not 25.
 
-Stage 3 gives separate pre, post and retest averages for each subject and Error-minus-Correct differences, with two-sided equal-variance unpaired t-tests and Bonferroni across 8000 comparisons within each subject/session. This is not a correction across all six plots. These are descriptive reproduction diagnostics, not proof of an ErrP mechanism. It does not perform classification, topographies or feature selection. Those stages follow the agreed figure/metadata validation.
+## FORCe integration and dependencies
 
-Session outputs are under figures/by_session, with session_counts.csv and six PNG/MAT pairs. Earlier pooled plots in figures are historical outputs and are not regenerated by stage 3. Trial tables and the manifest explicitly retain subject, session, recordingDate and runNumber. Runs of the same session type across dates are combined within that subject/session; dates remain available for further stratification. Accepted trial metadata are saved alongside each session average. The approved baseline, amplitude rejection and data-loss/filter guards are unchanged.
+The supplied implementation is in `Code/FORCe`, with Windows x64 compiled
+histogram helpers in `Code/FORCe/mex-files`. MATLAB Wavelet, Signal Processing
+and Statistics and Machine Learning toolboxes are used. No Python port or
+new external package is needed. The adapter is
+`Code/helpers/clean_epoch_force.m`; stage 2 remains one script with short
+Stage 2a-2g labels. Wavelet boundary mode is explicitly `sym` during cleaning
+and restored afterward. Channel locations come from `chanlocs8.mat` in the
+recording order. Accelerometer mode is disabled.
 
-## Planned FORCe version (v2)
+The pipeline uses the supplied `FORCe.m` and `mi.m`, with local fixes applied
+in place. [Applied fixes](FORCe/PATCHES.md) summarizes the MEX function-name
+correction, failure diagnostics and validation. Modified lines are marked
+`updated by Satyam`; original author and license notices are retained.
+Unmodified source copies are retained as non-executable text in
+`Code/FORCe/upstream` for comparison. The adapter handles windowing and quality
+checks while calling the supplied cleaning algorithm. Scientific thresholds
+and decomposition logic are unchanged. To avoid accepting unvalidated
+coordinate-scale-dependent interpolation, the adapter rejects windows that invoke that branch. It also
+flags invalid input/output, flat channels, channel-threshold failures and
+all-IC removal. These are documented pilot quality policies.
 
-Keep the four stage scripts. Stage 2 remains one script with logical sections;
-a planned `Code/helpers/clean_epoch_force.m` adapter will handle one-second
-FORCe windows, validation and cleaning diagnostics. It does not yet exist.
+## Saved results
 
-The supplied library is in `Code/FORCe`, with compiled Windows helpers in
-`Code/FORCe/mex-files`. `mex_Me` is unrelated to this cleaning call path. See `Code/FORCe/PATCHES.md` for provenance and pending fixes.
+Each processed run contains final `epochs`, `trials` with acceptance flags and
+rejection reasons, `time`, `channels`, recording information and configuration.
+Rejected epochs remain NaN. Stage 2 recomputes the selected runs on each
+execution and replaces their v2 outputs. It does not use file hashes or
+cache matching, and it never writes to the v1 output root.
 
-Reserve `output/pipeline_v2` for the FORCe-enabled analysis. A v2 pilot must
-select spe30 and mle01 explicitly and compare them separately against v1,
-using both common retained trials and each pipeline's final retained set.
-Check waveform preservation, cleaning failures, condition counts and the
-join between the two cleaning windows before expanding to 25 participants.
-Record the algorithm, settings and source hashes; the name v2 alone does
-not specify the cleaning method or establish exact paper reproduction.
+`test_force_integration` is an optional quick check on one real epoch and an
+invalid input; it is not required before each analysis run.
 
-`config.m` still points to `output/pipeline_v1`: no cleaning run or output
-migration was performed during this reorganization. Before any v2 execution,
-add explicit version/subject selection and ensure ALL stages use the v2
-output root (stage-1 metadata may be reused read-only with provenance).
-Never run a FORCe-enabled stage against the v1 output root. Existing v1
-products must be retained; normal v1 reruns still overwrite v1 products.
+## Pilot review
+
+Optionally run `compare_pipeline_versions` to compare saved v1 results with
+the configured pipeline. It writes participant/session comparisons under
+`output/pipeline_v2/comparison`: identical retained trials (`common`), each
+pipeline's retained trials (`own`). A table records condition counts and
+recovered/lost trials. The comparison uses saved v1 epochs as its reference.
+Reduced amplitude alone is not evidence of successful artifact removal.
+Inspect all channels and possible boundary steps before expanding the
+subject list.
+
+The 1-20 Hz-before-FORCe ordering follows the conference paper's stated
+sequence. Higher-frequency internal criteria and independent-window seams
+remain methodological concerns, not automatically corrected bugs. Exact
+historical reproduction still requires the group's settings/reference output.
+No significant ErrP mechanism or stimulation effect follows from a successful
+software test or a cleaner-looking waveform.
+
+Complete two-participant results are described in
+[VALIDATION.md](../output/pipeline_v2/VALIDATION.md). The movement-onset window
+join remains a methodological concern; review window placement before
+interpreting the cleaned ErrP.
