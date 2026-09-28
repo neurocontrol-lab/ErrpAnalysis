@@ -63,7 +63,7 @@ and Statistics and Machine Learning toolboxes are used. No Python port or
 new external package is needed. The adapter is
 `Code/helpers/clean_epoch_force.m`; stage 2 remains one script with short
 Stage 2a-2g labels. Wavelet boundary mode is explicitly `sym` during cleaning
-and restored afterward. Channel locations come from `chanlocs8.mat` in the
+and restored afterward. Channel locations come from `Code/resources/chanlocs8.mat` in the
 recording order. Accelerometer mode is disabled.
 
 The pipeline uses the supplied `FORCe.m` and `mi.m`, with local fixes applied
@@ -155,3 +155,22 @@ Results are saved separately under `output/pipeline_v2_filter_after`; the
 summarizes retention and matched-trial waveform changes. The new sequence
 retains 2,616 trials versus 2,611, with a median condition-average correlation
 of 0.992. This does not by itself establish better artifact removal.
+
+## Code layout
+
+The four stage scripts and `config.m` are the pipeline entry points.
+`helpers/` contains shared functions and the optional comparison script;
+`tests/` contains the two optional checks; `resources/` holds channel locations.
+`FORCe/` contains the supplied library, and `legacy/` holds the earlier analysis.
+
+From the repository root, run the optional comparison or checks with:
+
+```matlab
+addpath('Code', 'Code/helpers', 'Code/tests')
+compare_pipeline_versions
+test_event_parser
+test_force_integration
+```
+
+Add only the required folders to the MATLAB path; recursively adding `Code/`
+also includes legacy toolboxes and can introduce conflicting function names.

@@ -20,7 +20,7 @@ assert(strcmp(which('FORCe'),fullfile(cfg.forceRoot,'FORCe.m')),'Unexpected FORC
 assert(~isempty(which('wpdec')),'Wavelet Toolbox required');
 previousWaveletMode=dwtmode('status','nodisp'); dwtmode('sym','nodisp');
 waveletCleanup=onCleanup(@() dwtmode(previousWaveletMode,'nodisp'));
-locations=load(fullfile(cfg.root,'chanlocs8.mat')); chanlocs=locations.chanlocs8;
+locations=load(fullfile(cfg.root,'Code','resources','chanlocs8.mat')); chanlocs=locations.chanlocs8;
 assert(all(isfinite([[chanlocs.X];[chanlocs.Y];[chanlocs.Z]]),'all'),'Invalid coordinates');
 manifest=readtable(manifestPath,'TextType','string','Delimiter',',','VariableNamingRule','preserve');
 manifest=sortrows(manifest,{'subject','session','recordingDate','runNumber','run'});
