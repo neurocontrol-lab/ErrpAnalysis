@@ -1,9 +1,8 @@
 # FORCe applied fixes
 
 The supplied FORCe library has the following local fixes for use in this
-analysis. Modified code is marked `updated by Satyam`; original author and
-license notices are retained. Original sources are available as
-non-executable text in `upstream/` for comparison.
+analysis. Modified code is marked `Update by Satyam`; original author and
+license notices are retained. The previous implementation is retained in Git history.
 
 ## Applied fixes
 
@@ -15,9 +14,7 @@ non-executable text in `upstream/` for comparison.
   rejected channels, rejected independent components, all-component removal,
   and the no-usable-channel abort. This lets the pipeline distinguish failed
   cleaning from valid output, including the original abort path that returns
-  the input unchanged. Existing one-output calls remain supported. Cleaning
-  thresholds, interpolation, decomposition and reconstructed samples are
-  unchanged.
+  the input unchanged. Existing one-output calls remain supported. This diagnostic addition itself does not change cleaning decisions.
 
 ## Validation
 
@@ -38,13 +35,42 @@ pipeline quality policies, not changes to the FORCe algorithm.
 
 The optional adapter check covers one real epoch and invalid-input handling.
 
-## Unresolved scientific checks
+## Coding corrections and refactors
 
-The positive-only 200-microvolt channel threshold, coordinate-dependent
-interpolation, IC spikiness indexing, spectral criteria after 1-20 Hz
-filtering remain unchanged and require scientific validation. Independent-window
-join artifacts are addressed by the two-second pipeline setting, evaluated in
-the [window-length comparison](../../output/pipeline_v2_1/WINDOW_COMPARISON.md);
-this is separate from library bug fixes. Passing numerical regression
-checks does not establish physiological validity; see the
-[pilot validation report](../../output/pipeline_v2/VALIDATION.md).
+- **IC spike indexing (`FORCe.m`):** use the current IC projection, and its
+  channel-mean trace for both numerator and denominator. The previous code
+  reused IC 1 and selected a channel using the component index. This changes
+  the spike vote; the intended scientific spike formula remains under review.
+- **FFT bins (`powerspectrum.m`):** frequency labels now match the selected
+  FFT bins. Row and column inputs agree. The legacy doubled FFT magnitudes
+  and omitted Nyquist bin are retained; this helper does not compute PSD.
+- **Undefined features:** nonfinite IC features, zero spectral normalization,
+  unavailable spectral bands and undefined spike statistics fail explicitly.
+  The adapter rejects the epoch with `invalid_feature` rather than silently
+  treating a NaN comparison as a passed criterion.
+- **Decomposition:** optional explicit depth defaults to 2; cell arrays are
+  vectors sized for the channels and terminal nodes. The all-lowpass node is
+  identified by its tree index; all other terminals use the detail policy.
+  Deeper levels remain scientifically unvalidated.
+- **Unsupported mode and comments:** accelerometer mode fails explicitly;
+  window/output comments and the histogram default description are corrected.
+
+## Pending scientific clarification
+
+High priority: coefficient sampling rate in spectra; magnitude versus PSD and
+threshold units; disabled 1/f vote and added 20 Hz ratio; two-sided kurtosis;
+spike-zone formula, neighborhood and paper equation/prose inconsistencies.
+These have not been changed by the coding corrections above.
+
+Also unresolved: positive-only 200-microvolt threshold (library and adapter),
+coordinate-dependent interpolation (excluded by the adapter), un-restored
+SOBI coefficient means, and physical-time lag/neighborhood settings and
+available spectral criteria at greater depths. Consult Prof. Perdikis before
+altering these scientific choices.
+
+The current pilot keeps two-second windows, two decomposition levels and
+HP -> FORCe -> LP processing. Outputs are saved separately in
+`output/pipeline_v2_3`, compared with `output/pipeline_v2_2`.
+
+The [completed coding-fix pilot](../../output/pipeline_v2_3/CODING_FIX_COMPARISON.md)
+records the focused checks and comparison results.

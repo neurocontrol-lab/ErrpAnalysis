@@ -1,8 +1,8 @@
 # MATLAB EEG pipeline
 
-## Current configuration: FORCe v2 pilot
+## Current configuration: FORCe v2.3 pilot
 
-`config()` selects `output/pipeline_v2_2` and all eligible runs for spe30 and
+`config()` selects `output/pipeline_v2_3` and all eligible runs for spe30 and
 mle01 across pre, post and retest sessions. `config('v1')` exposes the historical
 settings for reference. Stage 2 refuses to write to the v1 root.
 Original recordings, legacy labels and existing `output/pipeline_v1`
@@ -11,7 +11,8 @@ eligible task recordings: 29 of 36 recordings, with seven excluded because
 no trials passed event validation. The current experiment uses continuous 1 Hz high-pass filtering, two-second
 FORCe cleaning, then per-epoch 20 Hz low-pass filtering. Earlier outputs remain
 in `pipeline_v2` (one-second windows) and `pipeline_v2_1` (two-second windows,
-bandpass before cleaning). Set `cfg.filterPlacement='before'` to restore the
+bandpass before cleaning), with the previous split-filter run in
+`pipeline_v2_2`. Set `cfg.filterPlacement='before'` to restore the
 earlier order; `cfg.forceWindowSeconds` then selects its one- or two-second
 variant and output folder.
 
@@ -69,11 +70,10 @@ recording order. Accelerometer mode is disabled.
 The pipeline uses the supplied `FORCe.m` and `mi.m`, with local fixes applied
 in place. [Applied fixes](FORCe/PATCHES.md) summarizes the MEX function-name
 correction, failure diagnostics and validation. Modified lines are marked
-`updated by Satyam`; original author and license notices are retained.
-Unmodified source copies are retained as non-executable text in
-`Code/FORCe/upstream` for comparison. The adapter handles windowing and quality
-checks while calling the supplied cleaning algorithm. Scientific thresholds
-and decomposition logic are unchanged. To avoid accepting unvalidated
+`Update by Satyam`; original author and license notices are retained.
+The previous implementation is retained in Git history. The adapter handles windowing and quality
+checks while calling the supplied cleaning algorithm. Numerical thresholds and the two-level decomposition remain unchanged;
+IC indexing, FFT-bin labels and undefined-feature handling are corrected. To avoid accepting unvalidated
 coordinate-scale-dependent interpolation, the adapter rejects windows that invoke that branch. It also
 flags invalid input/output, flat channels, channel-threshold failures and
 all-IC removal. These are documented pilot quality policies.
@@ -92,8 +92,8 @@ invalid input; it is not required before each analysis run.
 ## Comparing processing settings
 
 Optionally run `compare_pipeline_versions` after stages 2 and 3. It reads
-`cfg.comparisonOutput` (the earlier bandpass-first, two-second results) and
-`cfg.output` (the split-filter experiment), then writes comparisons under `cfg.output/comparison`:
+`cfg.comparisonOutput` (the saved split-filter pilot) and
+`cfg.output` (the v2.3 coding-fix pilot), then writes comparisons under `cfg.output/comparison`:
 
 - `common` and `own` figures: averages on identical accepted trials and on
   each method's accepted trials, respectively. Current results are solid;
@@ -175,6 +175,19 @@ test_force_integration
 Add only the required folders to the MATLAB path; recursively adding `Code/`
 also includes legacy toolboxes and can introduce conflicting function names.
 
+## Minor update: FORCe coding fixes (v2.3)
+
+The current configuration uses `output/pipeline_v2_3`, retaining the previous
+split-filter pilot in `output/pipeline_v2_2` as the comparison.
+Both use spe30 and mle01, all eligible runs, two-second windows, two wavelet
+levels and the same filters/baseline. Stage 1 still reuses the v1 manifest.
+The existing FORCe library contains the [applied coding corrections](FORCe/PATCHES.md);
+scientific departures requiring clarification are listed separately there.
+
+[Completed v2.3 pilot comparison](../output/pipeline_v2_3/CODING_FIX_COMPARISON.md):
+2,617 accepted trials versus 2,616 previously, with no lost trials; median
+common-trial condition-average correlation 0.99898.
+
 ## Output versions
 
 | Folder | Processing change |
@@ -183,3 +196,4 @@ also includes legacy toolboxes and can introduce conflicting function names.
 | `pipeline_v2` | Initial FORCe integration, one-second windows |
 | `pipeline_v2_1` | Two-second FORCe windows |
 | `pipeline_v2_2` | High-pass -> FORCe -> low-pass |
+| `pipeline_v2_3` | FORCe coding corrections and refactors |

@@ -22,7 +22,7 @@ for w=1:size(epoch,1)/windowSamples
     else
         try
             % Suppress the library's verbose console output.
-            evalc('[y, details]=FORCe(x,cfg.fs,chanlocs,0);');
+            evalc('[y, details]=FORCe(x,cfg.fs,chanlocs,0,cfg.forceLevel);');
             status=string(details.status);
             if ~isequal(size(y),size(x)) || ~isreal(y) || any(~isfinite(y),'all')
                 status="invalid_output";
@@ -32,7 +32,11 @@ for w=1:size(epoch,1)/windowSamples
             if status=="ok", clean(ix,:)=y'; end
         catch ME
             warning('FORCe:CleaningFailed','%s',ME.message);
-            status="failed";
+            if strcmp(ME.identifier,'FORCe:InvalidFeature')
+                status="invalid_feature";
+            else
+                status="failed";
+            end
         end
     end
     if status~="ok", clean(:)=NaN; return; end

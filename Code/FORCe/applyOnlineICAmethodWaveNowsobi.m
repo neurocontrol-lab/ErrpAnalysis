@@ -1,4 +1,4 @@
-function [ICs mixMat wavePacks] = applyOnlineICAmethodWaveNowsobi( EEGdata )
+function [ICs mixMat wavePacks] = applyOnlineICAmethodWaveNowsobi( EEGdata, level )
     %
     % applyOnlineICAmethodWave
     %
@@ -49,15 +49,15 @@ function [ICs mixMat wavePacks] = applyOnlineICAmethodWaveNowsobi( EEGdata )
 %     end
     
     
-    % Pre-allocate for speed
-    wavePacket = cell(size(EEGdata,1));
-    waveData = cell(4);
-    wavePacks = cell(size(EEGdata,1));
-    ICs = cell(4);
-    mixMat = cell(4);
-    
-    % Perform wavelet decomposition.
-    level  = 2;           % Level of decomposition
+    % Update by Satyam: explicit depth and vector cell arrays; default remains two levels.
+    if nargin < 2, level = 2; end
+    validateattributes(level,{'numeric'},{'scalar','integer','positive'});
+    wavePacket = cell(1,size(EEGdata,1));
+    wavePacks = cell(1,size(EEGdata,1));
+    waveData = cell(1,2^level);
+    ICs = cell(1,2^level);
+    mixMat = cell(1,2^level);
+
     wName  = 'sym4';      % Near symmetric wavelet
 	for chNo = 1:size( EEGdata,1 ),
         wavePacket{chNo} = wpdec( EEGdata(chNo,:),level,wName );
@@ -73,7 +73,7 @@ function [ICs mixMat wavePacks] = applyOnlineICAmethodWaveNowsobi( EEGdata )
         
     % Sort data.
     for tN = 1:length( termNodes ),
-        if tN == 1,   
+        if termNodes(tN) == 2^level-1,
             %[mixMat{tN} V X] = sobi( waveData{tN} );
            % ICs{tN}= pinv(mixMat{tN})* waveData{tN};
              [mixMat{tN} V X] = sobi_FAST( waveData{tN} );

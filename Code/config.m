@@ -27,6 +27,7 @@ cfg.output = fullfile(cfg.root,'output',['pipeline_' cfg.version]);
 cfg.baselineOutput = fullfile(cfg.root,'output','pipeline_v1');
 cfg.parsedOutput = fullfile(cfg.baselineOutput,'parsed'); % shared event metadata for v1/v2
 cfg.cleaningMethod = 'none';
+cfg.forceLevel = 2; % explicit default; deeper decomposition is not yet validated
 cfg.forceWindowSeconds = 2; % compare one full epoch with the previous 1 s windows
 cfg.comparisonOutput = cfg.baselineOutput;
 cfg.comparisonLabel = 'v1';
@@ -43,10 +44,10 @@ if strcmp(cfg.version,'v2')
     end
     if strcmp(cfg.filterPlacement,'split')
         assert(cfg.forceWindowSeconds==2,'Filter-order comparison uses two-second windows');
-        cfg.output = fullfile(cfg.root,'output','pipeline_v2_2');
-        cfg.comparisonOutput = fullfile(cfg.root,'output','pipeline_v2_1');
-        cfg.comparisonLabel = 'BP then FORCe';
-        cfg.analysisLabel = 'HP then FORCe then LP';
+        cfg.output = fullfile(cfg.root,'output','pipeline_v2_3');
+        cfg.comparisonOutput = fullfile(cfg.root,'output','pipeline_v2_2');
+        cfg.comparisonLabel = 'Previous FORCe';
+        cfg.analysisLabel = 'FORCe coding fixes (v2.3)';
     end
 end
 cfg.forceRoot = fullfile(cfg.root,'Code','FORCe');

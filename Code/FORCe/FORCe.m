@@ -1,5 +1,5 @@
-function [cleanEEG, diagnostics] = FORCe( EEGdata, Fs, chanLocs, useAcc )
-    % updated by Satyam: optional diagnostics output; one-output calls remain valid.
+function [cleanEEG, diagnostics] = FORCe( EEGdata, Fs, chanLocs, useAcc, level )
+    % Update by Satyam: optional diagnostics output; one-output calls remain valid.
     %
     % FORCe -- changed name for confilct with another toolbox 
     %
@@ -15,7 +15,7 @@ function [cleanEEG, diagnostics] = FORCe( EEGdata, Fs, chanLocs, useAcc )
     % Inputs:
     %
     %   EEGdata     - M x N matrix of M channels by N samples. Note, the
-    %           method is currently hard coded to deal with 1 s of EEG.
+    %           window length is supplied by the caller (pipeline: 2 s).
     %   accSigs     - Signals from the accelerometer (currently not fully
     %           tests; the acceleromter didn't work when attempting to
     %           acquire test signals).
@@ -27,8 +27,8 @@ function [cleanEEG, diagnostics] = FORCe( EEGdata, Fs, chanLocs, useAcc )
     %
     % Output:
     %
-    %   cleanEEG    - M x N matrix of cleaned EEG where N is of length 100
-    %      ms, only the most recent 100 ms are cleaned.
+    %   cleanEEG    - cleaned EEG with the same dimensions as EEGdata.
+    %   level       - optional wavelet-packet depth; default 2.
     %
     % Author: Ian Daly, 2013
     %
@@ -62,9 +62,12 @@ function [cleanEEG, diagnostics] = FORCe( EEGdata, Fs, chanLocs, useAcc )
     %**********************************************************************
        
     % Begin function proper, check the dimmensions of the input data.   
-    % updated by Satyam: initialize diagnostics without changing cleaning decisions.
+    % Update by Satyam: initialize diagnostics without changing cleaning decisions.
     diagnostics = struct('status','ok','removedChannels',[], ...
         'removedICs',[],'allICsRemoved',false);
+    % Update by Satyam: explicit depth; unsupported accelerometer mode fails clearly.
+    if nargin < 5, level = 2; end
+    assert(useAcc == 0,'FORCe:UnsupportedAccelerometer','Accelerometer mode is unsupported');
     N = size( EEGdata,1 );
     M = size( EEGdata,2 );
     
@@ -89,10 +92,10 @@ function [cleanEEG, diagnostics] = FORCe( EEGdata, Fs, chanLocs, useAcc )
     % Check we have some usable data (ie. there are some channels with
     % amplitude below the 200uV threshold). If no usable date found just
     % retunr what we have (ie. retunr input without cleaning).
-    % updated by Satyam: expose channels rejected by the original threshold.
+    % Update by Satyam: expose channels rejected by the original threshold.
     diagnostics.removedChannels = remCh;
     if length( unique( remCh ) ) == size( EEGdata,1 ),
-        % updated by Satyam: distinguish aborted cleaning from successful output.
+        % Update by Satyam: distinguish aborted cleaning from successful output.
         diagnostics.status = 'no_usable_channels';
         disp( 'Error: No usable data in this EEG epoch: aborting!' );
         cleanEEG = EEGdata;
@@ -118,10 +121,13 @@ function [cleanEEG, diagnostics] = FORCe( EEGdata, Fs, chanLocs, useAcc )
     chData = estimateRemovedChs( EEGdata,remCh,chanLocs );
     
     % Estimate wavelet coefficients and ICs via Smlet wavelets and SOBI.
-    [ICs mixMat wavePacks] = applyOnlineICAmethodWaveNowsobi( chData );
+    [ICs mixMat wavePacks] = applyOnlineICAmethodWaveNowsobi( chData, level );
     wavePacksOut = wavePacks;
     tNodes = get( wavePacks{1},'tN' );
     
+    % Update by Satyam: identify the all-lowpass terminal node by its tree index.
+    approxBranch = find(tNodes == 2^level-1);
+    assert(isscalar(approxBranch),'FORCe:ApproximationNode','Missing approximation node');
     tUse = 1:length( tNodes );
         
     % Step through the terminal nodes.
@@ -135,7 +141,7 @@ function [cleanEEG, diagnostics] = FORCe( EEGdata, Fs, chanLocs, useAcc )
             sigsAcc = [];
         end
         
-        if tN == 1,% If this is the first terminal node (the approximation coefficients).
+        if tN == approxBranch,% If this is the first terminal node (the approximation coefficients).
             
             % Extract features to be thresholded.
             clear temp;
@@ -183,6 +189,9 @@ function [cleanEEG, diagnostics] = FORCe( EEGdata, Fs, chanLocs, useAcc )
                     % Get power spectrum
                     psT = powerspectrum( projIC{iNo}(pNo,:)',Fs );
                     
+                    % Update by Satyam: undefined spectral features must not silently pass.
+                    assert(any(psT(1,:)>30) && max(psT(2,2:end))>0, ...
+                        'FORCe:InvalidFeature','Undefined spectral feature');
                     % Match to 1/f distribution.
                     clear idealDistro;
                     idealDistro(1,:) = psT(1,:);
@@ -219,6 +228,9 @@ function [cleanEEG, diagnostics] = FORCe( EEGdata, Fs, chanLocs, useAcc )
                 
             end
             
+             % Update by Satyam: reject undefined IC features through the adapter's failure path.
+             assert(all(isfinite([ent specDist gammaPSD stdProj stdRatio featsClust(:)'])), ...
+                 'FORCe:InvalidFeature','Nonfinite IC feature');
              % Threshold Std ratio.
              stdRatioRem = find( stdRatio > (mean(stdRatio)+(1*std(stdRatio))) );
              
@@ -226,16 +238,20 @@ function [cleanEEG, diagnostics] = FORCe( EEGdata, Fs, chanLocs, useAcc )
              gammaRem = find( gammaPSD > 1.7 );
              
              % Check spikeness of data.
-             if tN == 1,
+             if tN == approxBranch,
                  for iNo = 1:size( ICs{tN},1 ),
                      % Find spike zones in data.
-                     muSig = abs( mean( projIC{tN} ) );
+                     % Update by Satyam: inspect this IC rather than the first IC.
+                     muSig = abs( mean( projIC{iNo} ) );
                      A1 = find( muSig(2:end-1) > muSig(3:end) )+1;
                      spikePos = A1(find( muSig(A1) > muSig(A1-1) ));
                      % Calculate coefficients of variation for each spike zone.
                      coefVar = zeros(1,length(spikePos));
                      for i = 1:length( spikePos ),
-                         coefVar(i) = std(abs(mean(projIC{tN}(:,spikePos(i)-1:spikePos(i)+1)))) / mean(abs(mean(projIC{tN}      (iNo,spikePos(i)-1:spikePos(i)+1))));
+                         % Update by Satyam: use the current IC and the same channel-mean trace in both terms.
+                         zone = abs(mean(projIC{iNo}(:,spikePos(i)-1:spikePos(i)+1),1));
+                         coefVar(i) = std(zone) / mean(zone);
+                         assert(isfinite(coefVar(i)),'FORCe:InvalidFeature','Undefined IC spike statistic');
                      end
                      % Apply soft thresholding to any spike zone for which the
                      % coefficient of variation exceeds the threshold.
@@ -267,6 +283,8 @@ function [cleanEEG, diagnostics] = FORCe( EEGdata, Fs, chanLocs, useAcc )
                 muHigh = mean(ps(2,find( ps(1,:) > 20 )));
                 psRatio(i) = muHigh / muLow;
             end
+            % Update by Satyam: empty bands or zero denominators are failures, not passed votes.
+            assert(all(isfinite(psRatio)),'FORCe:InvalidFeature','Undefined spectral ratio');
             remICspsRatio = find( psRatio > 1.0 );
             
             % Threshold the std of the IC projects.
@@ -297,10 +315,10 @@ function [cleanEEG, diagnostics] = FORCe( EEGdata, Fs, chanLocs, useAcc )
             
             % Check number of removed ICs is not the same as the total number
             % of ICs.
-            % updated by Satyam: expose the original component rejection decisions.
+            % Update by Satyam: expose the original component rejection decisions.
             diagnostics.removedICs = remICs;
             if length( remICs ) == size( ICs{tUse(tN)},1 ),
-                % updated by Satyam: flag all-component removal for pipeline QC.
+                % Update by Satyam: flag all-component removal for pipeline QC.
                 diagnostics.allICsRemoved = true;
                 diagnostics.status = 'all_ics_removed';
                 disp( 'Warning: All ICs removed!' );
@@ -315,14 +333,15 @@ function [cleanEEG, diagnostics] = FORCe( EEGdata, Fs, chanLocs, useAcc )
        
         % If we're currently dealing with the approximation coefficients
         % then remove the ICs flagged by the thresholding above.
-        if tN == 1,
+        if tN == approxBranch,
             newSigNode{tUse(tN)} = a * keepICs;
         else
             newSigNode{tUse(tN)} = ICs{tUse(tN)};
         end
         
         % Apply soft thresholding to adjust spike magnitudes.
-        if tN == 2 || tN == 3 || tN == 4,
+        % Update by Satyam: every non-approximation terminal uses the detail policy.
+        if tN ~= approxBranch,
             % Thresholds for detail coefficients.
             checkVal = 0.2;
             adjustVal = 0.07;
@@ -363,6 +382,9 @@ function [cleanEEG, diagnostics] = FORCe( EEGdata, Fs, chanLocs, useAcc )
                 newSigNode{tUse(tN)}(iNo,spikePos{iNo}+3)] );
             
             % Coefficient of variation.
+            % Update by Satyam: do not silently pass undefined spike-zone statistics.
+            assert(all(lowerVals>0) && all(isfinite(upperVals)), ...
+                'FORCe:InvalidFeature','Undefined soft-threshold statistic');
             coefVar{iNo} = upperVals ./ lowerVals;
             
             % Collect...

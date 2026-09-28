@@ -2,8 +2,7 @@ function p=powerspectrum( data, Fs )
     %
     % powerspectrum
     %
-    %  Take the FFT of the data series and spit back power
-    % spectrum formated data.
+    %  Return the legacy single-sided FFT magnitude spectrum (not PSD).
     %
     % Inputs:
     %
@@ -12,7 +11,7 @@ function p=powerspectrum( data, Fs )
     %
     % Output:
     %
-    %  p    - 2 x N vector of frequencies by power.
+    %  p    - two rows: FFT-bin frequencies and doubled magnitudes.
     %
     % Author: Ian Daly, 2013
     %
@@ -33,12 +32,17 @@ function p=powerspectrum( data, Fs )
     %
     %*********************************************************
 
-    T = 1/Fs;
-    L = size( data , 1 );
+    % Update by Satyam: accept either vector orientation and label the actual FFT bins.
+    % Retain the legacy doubled magnitude values and omitted Nyquist bin.
+    % This is an amplitude spectrum, not PSD; changing units requires threshold review.
+    validateattributes(data,{'numeric'},{'vector','real','finite','nonempty'});
+    validateattributes(Fs,{'numeric'},{'scalar','real','finite','positive'});
+    data = data(:);
+    L = numel(data);
+    assert(L>=2,'FORCe:ShortSpectrum','At least two samples are required');
     NFFT = 2^nextpow2(L);
     Y = fft(data,NFFT)/L;
-    f = Fs/2*linspace(0,1,NFFT/2);
-    power = 2*abs(Y(1:NFFT/2));
-    p(1,:) = f;
-    p(2,:) = power;
+    f = (0:NFFT/2-1)*Fs/NFFT;
+    magnitude = 2*abs(Y(1:NFFT/2));
+    p = [f; magnitude'];
 end

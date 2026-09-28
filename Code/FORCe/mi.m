@@ -1,7 +1,7 @@
 function I=mi(A,B,varargin) 
 %MI Determines the mutual information of two images or signals
 %
-%   I=mi(A,B)   Mutual information of A and B, using 256 bins for
+%   I=mi(A,B)   Mutual information of A and B, using 32 bins for
 %   histograms
 %   I=mi(A,B,L) Mutual information of A and B, using L bins for histograms
 %
@@ -146,7 +146,7 @@ switch length( A ),
         nb = nb/sum(nb);
         n2 = hist2a__76_mex(A,B,L);
     case 72,
-        % updated by Satyam: use the supplied hista__72_mex binary (two underscores).
+        % Update by Satyam: use the supplied hista__72_mex binary (two underscores).
         na = hista__72_mex(A(:),L);
         na = na/sum(na);
         nb = hista__72_mex(B(:),L);
