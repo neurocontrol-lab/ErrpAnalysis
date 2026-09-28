@@ -44,7 +44,7 @@ The positive-only 200-microvolt channel threshold, coordinate-dependent
 interpolation, IC spikiness indexing, spectral criteria after 1-20 Hz
 filtering remain unchanged and require scientific validation. Independent-window
 join artifacts are addressed by the two-second pipeline setting, evaluated in
-the [window-length comparison](../../output/pipeline_v2_2s/WINDOW_COMPARISON.md);
+the [window-length comparison](../../output/pipeline_v2_1/WINDOW_COMPARISON.md);
 this is separate from library bug fixes. Passing numerical regression
 checks does not establish physiological validity; see the
 [pilot validation report](../../output/pipeline_v2/VALIDATION.md).

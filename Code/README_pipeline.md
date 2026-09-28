@@ -2,7 +2,7 @@
 
 ## Current configuration: FORCe v2 pilot
 
-`config()` selects `output/pipeline_v2_filter_after` and all eligible runs for spe30 and
+`config()` selects `output/pipeline_v2_2` and all eligible runs for spe30 and
 mle01 across pre, post and retest sessions. `config('v1')` exposes the historical
 settings for reference. Stage 2 refuses to write to the v1 root.
 Original recordings, legacy labels and existing `output/pipeline_v1`
@@ -10,7 +10,7 @@ products are retained. Both participants have now been processed across all
 eligible task recordings: 29 of 36 recordings, with seven excluded because
 no trials passed event validation. The current experiment uses continuous 1 Hz high-pass filtering, two-second
 FORCe cleaning, then per-epoch 20 Hz low-pass filtering. Earlier outputs remain
-in `pipeline_v2` (one-second windows) and `pipeline_v2_2s` (two-second windows,
+in `pipeline_v2` (one-second windows) and `pipeline_v2_1` (two-second windows,
 bandpass before cleaning). Set `cfg.filterPlacement='before'` to restore the
 earlier order; `cfg.forceWindowSeconds` then selects its one- or two-second
 variant and output folder.
@@ -112,7 +112,7 @@ one-second method; a smoother onset alone does not establish better recovery
 of physiological activity. That experiment held filter ordering and other processing settings fixed.
 
 The previous one-second results are in
-[VALIDATION.md](../output/pipeline_v2/VALIDATION.md). The completed [window-length comparison](../output/pipeline_v2_2s/WINDOW_COMPARISON.md)
+[VALIDATION.md](../output/pipeline_v2/VALIDATION.md). The completed [window-length comparison](../output/pipeline_v2_1/WINDOW_COMPARISON.md)
 supports the two-second setting: on 2,610 common trials, the median onset step
 decreased from 2.79 to 0.57 microvolts while nearby variation remained similar.
 
@@ -150,8 +150,8 @@ so differences cannot be attributed exclusively to ordering. MATLAB's
 describes endpoint-transient handling; filtering a short epoch can still affect
 its edges. No extra smoothing, padding scheme, or threshold adjustment is used.
 
-Results are saved separately under `output/pipeline_v2_filter_after`; the
-[completed comparison report](../output/pipeline_v2_filter_after/FILTER_ORDER_COMPARISON.md)
+Results are saved separately under `output/pipeline_v2_2`; the
+[completed comparison report](../output/pipeline_v2_2/FILTER_ORDER_COMPARISON.md)
 summarizes retention and matched-trial waveform changes. The new sequence
 retains 2,616 trials versus 2,611, with a median condition-average correlation
 of 0.992. This does not by itself establish better artifact removal.
@@ -174,3 +174,12 @@ test_force_integration
 
 Add only the required folders to the MATLAB path; recursively adding `Code/`
 also includes legacy toolboxes and can introduce conflicting function names.
+
+## Output versions
+
+| Folder | Processing change |
+|---|---|
+| `pipeline_v1` | Original pipeline |
+| `pipeline_v2` | Initial FORCe integration, one-second windows |
+| `pipeline_v2_1` | Two-second FORCe windows |
+| `pipeline_v2_2` | High-pass -> FORCe -> low-pass |

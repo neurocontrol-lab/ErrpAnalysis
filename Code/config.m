@@ -37,14 +37,14 @@ if strcmp(cfg.version,'v2')
     cfg.cleaningMethod = 'FORCe';
     cfg.analysisLabel = sprintf('FORCe %g s',cfg.forceWindowSeconds);
     if cfg.forceWindowSeconds==2
-        cfg.output = fullfile(cfg.root,'output','pipeline_v2_2s');
+        cfg.output = fullfile(cfg.root,'output','pipeline_v2_1');
         cfg.comparisonOutput = fullfile(cfg.root,'output','pipeline_v2');
         cfg.comparisonLabel = 'FORCe 1 s';
     end
     if strcmp(cfg.filterPlacement,'split')
         assert(cfg.forceWindowSeconds==2,'Filter-order comparison uses two-second windows');
-        cfg.output = fullfile(cfg.root,'output','pipeline_v2_filter_after');
-        cfg.comparisonOutput = fullfile(cfg.root,'output','pipeline_v2_2s');
+        cfg.output = fullfile(cfg.root,'output','pipeline_v2_2');
+        cfg.comparisonOutput = fullfile(cfg.root,'output','pipeline_v2_1');
         cfg.comparisonLabel = 'BP then FORCe';
         cfg.analysisLabel = 'HP then FORCe then LP';
     end
